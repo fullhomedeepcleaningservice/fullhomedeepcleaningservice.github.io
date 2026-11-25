@@ -119,10 +119,10 @@ window.renderCart = function() {
     var s = window.services[k];
     if (s.count > 0) {
       html += '<div class="py-3 flex justify-between items-start">' +
-        '<div><h4 class="text-sm font-bold text-slate-900">' + s.name + '</h4>' +
-        '<p class="text-xs text-slate-500">' + s.sub + '</p></div>' +
-        '<div class="text-right"><span class="text-sm font-bold text-slate-900 block">₹' + s.price.toLocaleString('en-IN') + '</span>' +
-        '<button onclick="window.toggleItem(\'' + k + '\')" type="button" class="text-rose-500 font-bold text-xs mt-1 bg-rose-50 px-2.5 py-1 rounded">Remove</button></div></div>';
+        '<div><h4 class="text-xs font-bold text-slate-900">' + s.name + '</h4>' +
+        '<p class="text-[11px] text-slate-500">' + s.sub + '</p></div>' +
+        '<div class="text-right"><span class="text-xs font-bold text-slate-900 block">₹' + s.price.toLocaleString('en-IN') + '</span>' +
+        '<button onclick="window.toggleItem(\'' + k + '\')" type="button" class="text-rose-500 font-bold text-[10px] mt-1 bg-rose-50 px-2 py-0.5 rounded">Remove</button></div></div>';
     }
   }
   box.innerHTML = html;
@@ -136,13 +136,13 @@ window.openDetails = function(key) {
   document.getElementById('detailModalSubtitle').textContent = s.sub;
   document.getElementById('detailModalPrice').textContent = '₹' + s.price.toLocaleString('en-IN');
   var scopeHtml = s.fur
-    ? '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">' +
+    ? '<div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1 text-[11px] text-slate-700">' +
       '<p>✓ Single-disc rotary machine floor scrubbing & buffing</p>' +
       '<p>✓ Sofa & mattress dry vacuum dust extraction</p>' +
       '<p>✓ Bathroom hard water descaling, commode & taps mirror polish</p>' +
       '<p>✓ Kitchen exterior cabinets, stove & tiles degreasing</p>' +
       '<p>✓ Balcony wash, grills, windows, fans & cobweb removal</p></div>'
-    : '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">' +
+    : '<div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1 text-[11px] text-slate-700">' +
       '<p>✓ Industrial rotary machine floor scrubbing & stain removal</p>' +
       '<p>✓ Inside & outside cleaning of all empty cabinets & wardrobes</p>' +
       '<p>✓ Bathroom tiles descaling, commode deep wash & chrome polish</p>' +
@@ -255,91 +255,444 @@ window.searchMap = function() {
 
 window.confirmMap = function() {
   var link = 'https://www.google.com/maps?q=' + window.pinLat.toFixed(6) + ',' + window.pinLng.toFixed(6);
-  document.getElementById('custMapLink').value = link;
-  if (window.pinAddr) {
-    document.getElementById('custArea').value = window.pinAddr;
-  }
+  var box = document.getElementById('custAddr');
+  box.value = 'Google Maps: ' + link + (window.pinAddr ? '\n' + window.pinAddr : '');
   document.getElementById('pinMapModal').classList.add('hidden');
   document.getElementById('pinMapModal').classList.remove('flex');
+  var flatBox = document.getElementById('custFlat');
+  if (flatBox && !flatBox.value) flatBox.focus();
 };
 
 window.sendWhatsApp = function() {
   var name = document.getElementById('custName').value.trim();
   var date = document.getElementById('custDate').value;
   var slot = document.getElementById('custSlot').value;
-  var apt = document.getElementById('custApt').value.trim();
-  var block = document.getElementById('custBlock').value.trim();
   var flat = document.getElementById('custFlat').value.trim();
-  var area = document.getElementById('custArea').value.trim();
-  var mapLink = document.getElementById('custMapLink').value.trim();
+  var addr = document.getElementById('custAddr').value.trim();
 
   if (!name) { alert('Please enter your Full Name.'); document.getElementById('custName').focus(); return; }
-  if (!apt) { alert('Please enter Apartment / Building Name.'); document.getElementById('custApt').focus(); return; }
-  if (!flat) { alert('Please enter Flat / Door Number.'); document.getElementById('custFlat').focus(); return; }
-  if (!area) { alert('Please pin location or enter Area / Landmark.'); document.getElementById('custArea').focus(); return; }
+  if (!flat) { alert('Please enter Apartment Name, Block & Flat Number.'); document.getElementById('custFlat').focus(); return; }
+  if (!addr) { alert('Please pin your location or enter Area/Landmark.'); document.getElementById('custAddr').focus(); return; }
 
   var items = [];
   for (var k in window.services) {
     if (window.services[k].count > 0) items.push(window.services[k].name + ' (₹' + window.services[k].price + ')');
   }
   var msg = '*New Booking - Full Home Deep Cleaning Service*\n\n' +
-    '👤 *Customer Name:* ' + name + '\n' +
-    '📱 *Verified Phone:* ' + window.userPhone + '\n' +
-    '🧹 *Booked Services:*\n• ' + items.join('\n• ') + '\n\n' +
-    '💰 *Total Amount:* ₹' + window.getTotal().toLocaleString('en-IN') + '\n' +
-    '📅 *Date & Time:* ' + date + ' at ' + slot + '\n\n' +
-    '🏢 *Apartment / Society:* ' + apt + '\n' +
-    '🏗️ *Block / Tower:* ' + (block ? block : 'N/A') + '\n' +
-    '🚪 *Flat / Door No.:* ' + flat + '\n' +
-    '📍 *Area / Landmark:* ' + area + '\n' +
-    (mapLink ? '🗺️ *Google Maps Link:* ' + mapLink : '');
-
+    '👤 *Name:* ' + name + '\n' +
+    '📱 *Phone:* ' + window.userPhone + '\n' +
+    '🧹 *Services:*\n• ' + items.join('\n• ') + '\n\n' +
+    '💰 *Total:* ₹' + window.getTotal().toLocaleString('en-IN') + '\n' +
+    '📅 *Date:* ' + date + ' (' + slot + ')\n' +
+    '🏢 *Apartment / Block / Flat:* ' + flat + '\n' +
+    '📍 *Location & Area:*\n' + addr;
   window.open('https://wa.me/919908093964?text=' + encodeURIComponent(msg), '_blank');
 };
 </script>
 <style>
-  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; background: #f8fafc; font-size: 16px; }
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; background: #f8fafc; }
   .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; overflow: hidden; }
-  .app-scrollable-body { flex: 1 1 auto; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 95px; scroll-behavior: smooth; }
+  .app-scrollable-body { flex: 1 1 auto; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 85px; scroll-behavior: smooth; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
   <div class="app-container">
-    <header class="flex-shrink-0 bg-white border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between z-30">
+    <header class="flex-shrink-0 bg-white border-b border-slate-200 px-3 py-2 flex items-center justify-between z-30">
       <div class="flex items-center gap-2">
-        <div class="w-9 h-9 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm">FH</div>
+        <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs">FH</div>
         <div>
-          <h1 class="text-sm font-bold leading-tight text-slate-900">Full Home Deep Cleaning Service</h1>
-          <p class="text-[11px] text-slate-500 font-medium">Nanakramguda, Hyderabad</p>
+          <h1 class="text-xs sm:text-sm font-bold leading-tight text-slate-900">Full Home Deep Cleaning Service</h1>
+          <p class="text-[9px] text-slate-400 font-medium">Nanakramguda, Hyderabad</p>
         </div>
       </div>
       <div class="flex items-center gap-1.5">
-        <button onclick="window.goAbout()" type="button" class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold">About</button>
+        <button onclick="window.goAbout()" type="button" class="bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded-full text-[11px] font-bold">About</button>
         <a href="tel:+919908093964" class="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm">📞</a>
         <a href="https://wa.me/919908093964?text=Hello%20Full%20Home%20Deep%20Cleaning%20Service" target="_blank" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm">💬</a>
         <button onclick="window.openCart()" type="button" class="bg-slate-100 text-slate-800 px-2.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1">
-          <span>🛒</span><span id="navCartCount" class="bg-[#5c3cd6] text-white text-[11px] font-bold px-1.5 rounded-full">0</span>
+          <span>🛒</span><span id="navCartCount" class="bg-[#5c3cd6] text-white text-[10px] font-bold px-1.5 rounded-full">0</span>
         </button>
       </div>
     </header>
 
     <div id="catalogScreen" class="app-scrollable-body">
-      <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-xs text-slate-600">
+      <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
         <span class="font-bold">Full Home / By Room Cleaning</span>
-        <span class="text-slate-500 text-[11px]">⚡ Earliest: Tomorrow, 8:00 AM</span>
+        <span class="text-slate-500 text-[10px]">⚡ Earliest: Tomorrow, 8:00 AM</span>
       </div>
 
       <div class="pt-3 px-3">
-        <h3 class="text-sm font-bold text-slate-800 mb-2">People also take</h3>
+        <h3 class="text-xs font-bold text-slate-800 mb-2">People also take</h3>
         <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
-          <div class="min-w-[135px] w-[135px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
+          <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
             <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
-            <span class="text-xs font-bold text-slate-900 leading-tight block">Ceiling dusting & cobweb cleaning</span>
+            <span class="text-[10px] font-bold text-slate-900 leading-tight block">Ceiling dusting & cobweb cleaning</span>
             <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
               <span class="text-xs font-extrabold">₹199</span>
-              <button id="btn-addon_ceiling" onclick="window.toggleItem('addon_ceiling')" type="button" class="text-xs font-bold px-2.5 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+              <button id="btn-addon_ceiling" onclick="window.toggleItem('addon_ceiling')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
             </div>
           </div>
-          <div class="min-w-[135px] w-[135px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
-            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=250&q=80" class="w-full h-1
+          <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
+            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
+            <span class="text-[10px] font-bold text-slate-900 leading-tight block">Sofa & upholstery wet shampooing</span>
+            <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+              <span class="text-xs font-extrabold">₹149</span>
+              <button id="btn-addon_sofa" onclick="window.toggleItem('addon_sofa')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            </div>
+          </div>
+          <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
+            <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
+            <span class="text-[10px] font-bold text-slate-900 leading-tight block">Balcony deep cleaning</span>
+            <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+              <span class="text-xs font-extrabold">₹499</span>
+              <button id="btn-addon_balcony" onclick="window.toggleItem('addon_balcony')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main class="max-w-xl mx-auto px-2.5 pt-3 pb-6 space-y-5">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5">Full Home & Post-Construction Deep Cleaning</h2>
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- 1 BHK Unf -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('1bhk_unf')" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">1 BHK Unfurnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.78 (850K)</p>
+                </div>
+                <button onclick="window.openDetails('1bhk_unf')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹2,499</span>
+                  <button id="btn-1bhk_unf" onclick="window.toggleItem('1bhk_unf')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 1 BHK Fur -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('1bhk_fur')" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">1 BHK Furnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.79 (1.1M)</p>
+                </div>
+                <button onclick="window.openDetails('1bhk_fur')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹3,299</span>
+                  <button id="btn-1bhk_fur" onclick="window.toggleItem('1bhk_fur')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 2 BHK Unf -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('2bhk_unf')" src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">2 BHK Unfurnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.79 (920K)</p>
+                </div>
+                <button onclick="window.openDetails('2bhk_unf')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹3,299</span>
+                  <button id="btn-2bhk_unf" onclick="window.toggleItem('2bhk_unf')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 2 BHK Fur -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('2bhk_fur')" src="https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">2 BHK Furnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.82 (1.4M)</p>
+                </div>
+                <button onclick="window.openDetails('2bhk_fur')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹4,499</span>
+                  <button id="btn-2bhk_fur" onclick="window.toggleItem('2bhk_fur')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 3 BHK Unf -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('3bhk_unf')" src="https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">3 BHK Unfurnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.80 (750K)</p>
+                </div>
+                <button onclick="window.openDetails('3bhk_unf')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹4,499</span>
+                  <button id="btn-3bhk_unf" onclick="window.toggleItem('3bhk_unf')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 3 BHK Fur -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('3bhk_fur')" src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">3 BHK Furnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.83 (890K)</p>
+                </div>
+                <button onclick="window.openDetails('3bhk_fur')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹5,499</span>
+                  <button id="btn-3bhk_fur" onclick="window.toggleItem('3bhk_fur')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 4 BHK Unf -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('4bhk_unf')" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">4 BHK Unfurnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.81 (500K)</p>
+                </div>
+                <button onclick="window.openDetails('4bhk_unf')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹5,499</span>
+                  <button id="btn-4bhk_unf" onclick="window.toggleItem('4bhk_unf')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- 4 BHK Fur -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('4bhk_fur')" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5 flex flex-col flex-grow justify-between">
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">4 BHK Furnished</h3>
+                  <p class="text-[10px] text-slate-500 mt-0.5">★ 4.84 (620K)</p>
+                </div>
+                <button onclick="window.openDetails('4bhk_fur')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹6,999</span>
+                  <button id="btn-4bhk_fur" onclick="window.toggleItem('4bhk_fur')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Villa -->
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5">Independent Villa Deep Cleaning</h2>
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <img onclick="window.openDetails('villa_deep')" src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80" class="w-full h-36 object-cover">
+            <div class="p-3.5 space-y-3">
+              <div class="flex items-baseline justify-between">
+                <h3 class="text-sm font-bold text-slate-900">Luxury Independent Villa Deep Cleaning</h3>
+                <span class="text-xs font-black text-amber-600">₹5 / sq.ft</span>
+              </div>
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                <span class="text-[11px] font-semibold">Built-up Area:</span>
+                <div class="flex items-center gap-1.5 w-32">
+                  <input type="number" step="100" min="500" value="1500" oninput="window.updateVilla(this.value)" class="w-full text-xs font-bold px-2 py-1 bg-white border border-slate-300 rounded text-right">
+                  <span class="text-xs font-bold text-slate-500">sq.ft</span>
+                </div>
+              </div>
+              <button onclick="window.openDetails('villa_deep')" type="button" class="w-full py-1.5 text-[11px] font-bold text-[#5c3cd6] bg-slate-50 rounded-lg border border-slate-200">View details</button>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div>
+                  <span class="text-[10px] text-slate-400 block">Estimated Total</span>
+                  <span id="price-display-villa_deep" class="text-sm font-black">₹7,500</span>
+                </div>
+                <button id="btn-villa_deep" onclick="window.toggleItem('villa_deep')" type="button" class="text-xs font-bold px-4 py-1.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add Villa Clean</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Services -->
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5">Kitchen & Individual Services</h2>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('kitchen')" src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5">
+                <h3 class="text-xs font-bold">Kitchen Deep Clean</h3>
+                <button onclick="window.openDetails('kitchen')" type="button" class="w-full mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹1,499</span>
+                  <button id="btn-kitchen" onclick="window.toggleItem('kitchen')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('bathroom')" src="https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5">
+                <h3 class="text-xs font-bold">Bathroom Deep Clean</h3>
+                <button onclick="window.openDetails('bathroom')" type="button" class="w-full mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹399</span>
+                  <button id="btn-bathroom" onclick="window.toggleItem('bathroom')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('living')" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5">
+                <h3 class="text-xs font-bold">Living Room & Sofa</h3>
+                <button onclick="window.openDetails('living')" type="button" class="w-full mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹699</span>
+                  <button id="btn-living" onclick="window.toggleItem('living')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+              <img onclick="window.openDetails('window')" src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+              <div class="p-2.5">
+                <h3 class="text-xs font-bold">Window Glass & Grill</h3>
+                <button onclick="window.openDetails('window')" type="button" class="w-full mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
+                <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
+                  <span class="text-xs font-extrabold">₹199</span>
+                  <button id="btn-window" onclick="window.toggleItem('window')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 border border-slate-200">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <section id="aboutSection" class="pt-2">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3">
+            <span class="text-[10px] font-extrabold uppercase text-[#5c3cd6] block">About Us</span>
+            <h2 class="text-sm font-extrabold text-slate-900">Full Home Deep Cleaning Service</h2>
+            <p class="text-xs text-slate-600 leading-relaxed">Professional residential & commercial deep cleaning services across <strong>Nanakramguda, Hyderabad</strong> using industrial rotary scrubbers, high-suction vacuums, and eco-safe agents.</p>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 text-xs">
+              <p>📍 <strong>Location:</strong> Nanakramguda, Financial District, Hyderabad</p>
+              <p>📞 <strong>Phone:</strong> <a href="tel:+919908093964" class="font-bold text-[#5c3cd6]">+91 99080 93964</a></p>
+              <p>✉️ <strong>Email:</strong> <a href="mailto:kayasuddinmazumder@gmail.com" class="font-bold text-[#5c3cd6]">kayasuddinmazumder@gmail.com</a></p>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="tel:+919908093964" class="bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs text-center">📞 Call Now</a>
+              <a href="https://wa.me/919908093964?text=Hello%20Full%20Home%20Deep%20Cleaning%20Service" target="_blank" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs text-center">💬 WhatsApp</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Bottom Cart Bar -->
+    <div id="homeBottomBar" style="display: none;" class="absolute bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 py-3 shadow-lg flex items-center justify-between max-w-xl mx-auto">
+      <div>
+        <span id="bottomTotalPrice" class="text-base font-black text-slate-900 block leading-tight">₹0</span>
+        <span id="bottomItemCount" class="text-[10px] text-slate-500">0 services</span>
+      </div>
+      <button onclick="window.openCart()" type="button" class="bg-[#5c3cd6] text-white font-bold px-7 py-2.5 rounded-xl text-xs uppercase">View Cart ➔</button>
+    </div>
+
+    <!-- Cart Screen -->
+    <div id="cartScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
+      <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3">
+        <button onclick="window.showScreen('catalogScreen')" type="button" class="font-extrabold text-base p-1">←</button>
+        <h2 class="text-sm font-bold">Your Cart</h2>
+      </header>
+      <main class="max-w-md mx-auto px-4 pt-3 space-y-4">
+        <div id="cartScreenItems" class="divide-y divide-slate-100"></div>
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
+          <div class="flex justify-between"><span>Item Total</span><span id="billItemTotal" class="font-bold">₹0</span></div>
+          <div class="flex justify-between"><span>Taxes & Equipment</span><span class="text-emerald-600 font-bold">FREE</span></div>
+          <div class="border-t pt-2 flex justify-between font-extrabold text-sm"><span>Total Amount</span><span id="billFinalAmount" class="text-[#5c3cd6]">₹0</span></div>
+        </div>
+        <button onclick="window.openAuth()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-3.5 rounded-xl text-xs">Login / Sign up to proceed</button>
+      </main>
+    </div>
+
+    <!-- Address Screen -->
+    <div id="addressScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
+      <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3">
+        <button onclick="window.showScreen('cartScreen')" type="button" class="font-extrabold text-base p-1">←</button>
+        <h2 class="text-sm font-bold">Service Address & Schedule</h2>
+      </header>
+      <main class="max-w-md mx-auto px-4 pt-4 space-y-3 text-xs">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex justify-between">
+          <div><span class="text-[10px] text-slate-500 block">Verified Mobile</span><span id="displayVerifiedPhone" class="font-bold"></span></div>
+          <div class="text-right"><span class="text-[10px] text-slate-500 block">Payable</span><span id="addressBillTotal" class="font-black text-[#5c3cd6]"></span></div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Your Full Name</label>
+          <input type="text" id="custName" placeholder="Enter your full name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Service Date</label>
+            <input type="date" id="custDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Arrival Time</label>
+            <select id="custSlot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5">
+              <option value="08:00 AM">08:00 AM</option><option value="09:00 AM" selected>09:00 AM</option><option value="10:00 AM">10:00 AM</option><option value="12:00 PM">12:00 PM</option><option value="02:00 PM">02:00 PM</option><option value="04:00 PM">04:00 PM</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Apartment Name, Block & Flat No.</label>
+          <input type="text" id="custFlat" placeholder="e.g. Aparna CyberOn, Block B, Flat 402" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold text-slate-900">
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <span class="font-bold text-[11px] text-slate-700">GPS Location & Area</span>
+          <button onclick="window.openMap()" type="button" class="text-[10px] font-bold text-[#5c3cd6] bg-violet-50 border border-violet-200 px-2.5 py-1 rounded-full">📌 Pin on Map</button>
+        </div>
+        <textarea id="custAddr" rows="3" placeholder="Tap 'Pin on Map' or enter Area / Landmark" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></textarea>
+        <button onclick="window.sendWhatsApp()" type="button" class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-xl text-xs uppercase shadow-md">Confirm Booking via WhatsApp</button>
+      </main>
+    </div>
+  </div>
+
+  <!-- Map Modal -->
+  <div id="pinMapModal" class="fixed inset-0 z-50 bg-black/65 hidden flex-col justify-end">
+    <div class="bg-white rounded-t-3xl p-3 space-y-2.5 max-w-md mx-auto w-full text-xs">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold">Select Location on Map</h3>
+        <button onclick="document.getElementById('pinMapModal').classList.add('hidden')" type="button" class="w-6 h-6 rounded-full bg-slate-100 font-bold">✕</button>
+      </div>
+      <div class="flex gap-1.5">
+        <input type="text" id="mapSearchInput" placeholder="Search area..." class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5">
+        <button onclick="window.searchMap()" type="button" class="bg-slate-800 text-white font-bold px-3 py-1.5 rounded-xl">Search</button>
+        <button onclick="window.gpsMap()" type="button" class="bg-sky-50 text-sky-700 border border-sky-200 font-bold px-2.5 py-1.5 rounded-xl">📍 GPS</button>
+      </div>
+      <div id="leafletPinMap" class="w-full h-56 rounded-xl border border-slate-200"></div>
+      <div class="flex justify-between text-[10px]"><span>Selected Pin:</span><span id="pinCoordsText" class="font-bold text-[#5c3cd6]">17.419000, 78.348900</span></div>
+      <p id="modalPinAddressText" class="text-[10px] text-slate-500 truncate">Detecting GPS...</p>
+      <button onclick="window.confirmMap()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-2.5 rounded-xl">Use Selected Location ✓</button>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div id="detailsModalBackdrop" class="fixed inset-0 z-50 bg-black/60 hidden flex-col justify-end">
+    <div class="bg-white rounded-t-3xl p-4 space-y-3 max-w-md mx-auto w-full text-xs">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 id="detailModalTitle" class="font-bold"></h3>
+        <button onclick="window.closeDetails()" type="button" class="w-6 h-6 rounded-full bg-slate-100 font-bold">✕</button>
+      </div>
+      <div class="flex justify-between"><span id="detailModalSubtitle" class="text-slate-500"></span><span id="detailModalPrice" class="font-black"></span></div>
+      <div id="detailSectionsContainer"></div>
+      <div id="furnishedNoticeBlock" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-2 text-[10.5px]">⚠️ Wardrobe interiors are NOT included in furnished package.</div>
+      <button onclick="window.closeDetails()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-2.5 rounded-xl">Done</button>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="phoneAuthModal" class="fixed inset-0 z-50 bg-black/60 hidden flex-col justify-end">
+    <div class="bg-white rounded-t-3xl p-5 space-y-3 max-w-md mx-auto w-full text-xs">
+      <div class="flex justify-between items-center">
+        <h3 class="font-extrabold text-sm">Enter your phone number</h3>
+        <button onclick="window.closeAuth()" type="button" class="w-6 h-6 rounded-full bg-slate-100 font-bold">✕</button>
+      </div>
+      <input type="tel" id="sheetPhoneInput" maxlength="10" placeholder="10-digit mobile number" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-bold">
+      <div id="sheetOtpBlock" class="hidden space-y-2">
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2 text-center">Code: <strong id="sheetCodeDisplay" class="text-base">----</strong></div>
+        <input type="tel" id="sheetOtpInput" maxlength="4" placeholder="Enter 4-digit code" class="w-full text-center bg-slate-50 border border-slate-300 rounded-xl py-2 font-black">
+      </div>
+      <button id="sheetContinueBtn" onclick="window.stepAuth()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-3 rounded-xl">Continue</button>
+    </div>
+  </div>
+</body>
+</html>
