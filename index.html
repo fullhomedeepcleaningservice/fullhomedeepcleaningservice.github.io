@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Urban Shine - Cleaning Services</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8fafc;
+  }
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-scrollable-body {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 85px;
+    scroll-behavior: smooth;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <div class="app-container">
+
+    <!-- 1. FIXED HEADER -->
+    <header class="flex-shrink-0 bg-white border-b border-slate-200 px-3 py-2 flex items-center justify-between shadow-xs z-30">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-xs">
+          US
+        </div>
+        <div>
+          <h1 class="text-xs sm:text-sm font-bold leading-tight text-slate-900">Urban Shine</h1>
+          <p class="text-[9px] text-slate-400 font-medium">Cleaning Services • Nanakramguda, Hyderabad</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <button onclick="scrollToAbout()" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-full text-[11px] font-bold transition">
+          About
+        </button>
+        <a href="tel:+919908093964" title="Call Us" class="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm shadow-xs hover:bg-emerald-100 transition active:scale-95">📞</a>
+        <a href="https://wa.me/919908093964?text=Hello%20Urban%20Shine" target="_blank" title="WhatsApp Us" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm shadow-xs hover:bg-emerald-600 transition active:scale-95">💬</a>
+        <button onclick="handleCartClick()" type="button" class="relative bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 transition">
+          <span>🛒</span>
+          <span class="hidden sm:inline">Cart</span>
+          <span id="navCartCount" class="bg-[#5c3cd6] text-white text-[10px] font-bold px-1.5 rounded-full">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. SCROLLABLE CATALOG BODY -->
+    <div id="catalogScreen" class="app-scrollable-body">
+      <div class="px-4 py-2 bg-slate-100/70 border-b border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
+        <span class="font-bold">Full Home / By Room Cleaning</span>
+        <span class="text-slate-500 text-[10px]">⚡ Earliest slot: Tomorrow, 8:00 AM</span>
+      </div>
+
+      <!-- People also take -->
+      <div class="pt-3 px-3">
+        <h3 class="text-xs font-bold text-slate-800 mb-2">People also take</h3>
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1" id="peopleAlsoTakeContainer"></div>
+      </div>
+
+      <!-- Main Packages Grid -->
+      <main class="max-w-xl mx-auto px-2.5 pt-3 pb-6 space-y-5">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Full Home & Post-Construction Deep Cleaning</h2>
+          <div class="grid grid-cols-2 gap-2.5" id="packagesContainer"></div>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Independent Villa Deep Cleaning</h2>
+          <div id="villaContainer"></div>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Kitchen & Individual Services</h2>
+          <div class="grid grid-cols-2 gap-2.5" id="singleServicesContainer"></div>
+        </div>
+
+        <!-- ================= ABOUT US & CONTACT SECTION ================= -->
+        <section id="aboutSection" class="pt-2">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3.5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#5c3cd6] block">About Us</span>
+                <h2 class="text-sm font-extrabold text-slate-900 mt-0.5">Urban Shine Cleaning Services</h2>
+              </div>
+              <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                ✓ Trusted Local Team
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              We provide professional, reliable, and affordable residential and commercial deep cleaning services across <strong>Nanakramguda</strong> and surrounding areas in Hyderabad. Using industrial-grade rotary scrubbers, high-suction vacuums, and eco-safe cleaning agents, our trained team ensures spotless, hygienic spaces for apartments, villas, kitchens, and bathrooms.
+            </p>
+
+            <!-- Highlights -->
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+                <span class="text-sm block">🛡️</span>
+                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Verified Staff</span>
+              </div>
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+                <span class="text-sm block">⚙️</span>
+                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Pro Machines</span>
+              </div>
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+                <span class="text-sm block">💰</span>
+                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Transparent Price</span>
+              </div>
+            </div>
+
+            <!-- Contact Details -->
+            <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-2.5 text-xs">
+              <h3 class="text-[11px] font-extrabold text-slate-900 uppercase tracking-wide">Contact & Location</h3>
+              
+              <div class="flex items-start gap-2.5">
+                <span class="text-sm">📍</span>
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block">Service Location</span>
+                  <span class="font-bold text-slate-800">Nanakramguda, Financial District, Hyderabad, Telangana</span>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2.5">
+                <span class="text-sm">📞</span>
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block">Phone & WhatsApp</span>
+                  <a href="tel:+919908093964" class="font-bold text-[#5c3cd6] hover:underline">+91 99080 93964</a>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2.5">
+                <span class="text-sm">✉️</span>
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block">Email Address</span>
+                  <a href="mailto:kayasuddinmazumder@gmail.com" class="font-bold text-[#5c3cd6] hover:underline break-all">kayasuddinmazumder@gmail.com</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Direct Action Buttons -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <a href="tel:+919908093964" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs text-center shadow-xs transition">
+                📞 Call Now
+              </a>
+              <a href="https://wa.me/919908093964?text=Hello%20Urban%20Shine%2C%20I%20would%20like%20to%20enquire%20about%20cleaning%20services." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs text-center shadow-xs transition">
+                💬 WhatsApp Chat
+              </a>
+            </div>
+          </div>
+
+          <p class="text-center text-[10px] text-slate-400 mt-4">
+            © 2026 Urban Shine Cleaning Services • Nanakramguda, Hyderabad
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <!-- 3. STICKY BOTTOM CART BAR -->
+    <div id="homeBottomBar" style="display: none;" class="absolute bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-8px_25px_rgba(0,0,0,0.18)] flex items-center justify-between max-w-xl mx-auto">
+      <div>
+        <span id="bottomTotalPrice" class="text-base font-black text-slate-900 block leading-tight">₹0</span>
+        <span id="bottomItemCount" class="text-[10px] text-slate-500 font-medium">0 services</span>
+      </div>
+      <button onclick="handleCartClick()" type="button" class="bg-[#5c3cd6] hover:bg-[#4d30b8] text-white font-bold px-7 py-2.5 rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition">
+        <span>View Cart</span>
+        <span>➔</span>
+      </button>
+    </div>
+
+    <!-- ================= 2. YOUR CART SCREEN ================= -->
+    <div id="cartScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
+      <div class="flex flex-col min-h-full">
+        <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3">
+          <button onclick="showCatalogScreen()" type="button" class="text-slate-700 hover:text-black font-extrabold text-base p-1 -ml-1">
+            ←
+          </button>
+          <h2 class="text-sm font-bold text-slate-900">Your cart</h2>
+        </header>
+
+        <main class="max-w-md mx-auto px-4 pt-3 space-y-4 flex-1">
+          <span class="text-[11px] text-slate-400 block font-medium">Full Home / By Room Cleaning</span>
+          
+          <div id="cartScreenItems" class="divide-y divide-slate-100"></div>
+
+          <!-- People Also Take in Cart -->
+          <div class="pt-2 border-t border-slate-100">
+            <h4 class="text-xs font-bold text-slate-800 mb-2">People also take</h4>
+            <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1" id="cartPeopleAlsoTakeContainer"></div>
+          </div>
+
+          <!-- Coupons and offers -->
+          <div class="border-t border-slate-100 pt-2 flex items-center justify-between text-xs text-slate-700">
+            <div class="flex items-center gap-2">
+              <span>🏷️</span>
+              <span class="font-bold">Coupons and offers</span>
+            </div>
+            <span class="text-emerald-600 font-bold text-[11px]">APPLIED ✓</span>
+          </div>
+
+          <!-- Bill Summary -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
+            <h3 class="font-bold text-slate-900 text-xs mb-1">Bill Summary</h3>
+            <div class="flex justify-between text-slate-500">
+              <span>Item Total</span>
+              <span id="billItemTotal" class="font-semibold text-slate-700">₹0</span>
+            </div>
+            <div class="flex justify-between text-slate-500">
+              <span>Taxes & Equipment Charges</span>
+              <span class="text-emerald-600 font-semibold">FREE</span>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex justify-between font-extrabold text-sm text-slate-900">
+              <span>Total Amount</span>
+              <span id="billFinalAmount" class="text-[#5c3cd6]">₹0</span>
+            </div>
+          </div>
+        </main>
+
+        <div class="sticky bottom-0 z-40 bg-white border-t border-slate-200 p-3 shadow-md max-w-md mx-auto w-full mt-4">
+          <button onclick="openPhoneAuthModal()" type="button" class="w-full bg-[#5c3cd6] hover:bg-[#4d30b8] text-white font-bold py-3.5 rounded-xl text-xs tracking-wide shadow-md active:scale-95 transition">
+            Login/Sign up to proceed
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 3. SCHEDULE & ADDRESS SCREEN ================= -->
+    <div id="addressScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
+      <div class="flex flex-col min-h-full">
+        <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button onclick="backToCartFromAddress()" type="button" class="text-slate-700 hover:text-black font-extrabold text-base p-1 -ml-1">
+              ←
+            </button>
+            <h2 class="text-sm font-bold text-slate-900">Service Address & Schedule</h2>
+          </div>
+          <span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">✓ Verified</span>
+        </header>
+
+        <main class="max-w-md mx-auto px-4 pt-4 space-y-4 text-xs flex-1">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex justify-between items-center">
+            <div>
+              <span class="text-[11px] text-slate-500 block">Verified Mobile</span>
+              <span id="displayVerifiedPhone" class="font-bold text-slate-900"></span>
+            </div>
+            <div>
+              <span class="text-[11px] text-slate-500 block text-right">Payable Bill</span>
+              <span id="addressBillTotal" class="font-black text-[#5c3cd6] text-sm"></span>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Your Full Name</label>
+              <input type="text" id="custName" required placeholder="Enter full name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Service Date</label>
+                <input type="date" id="custDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Arrival Time</label>
+                <select id="custSlot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
+                  <option value="08:00 AM">08:00 AM</option>
+                  <option value="09:00 AM" selected>09:00 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="02:00 PM">02:00 PM</option>
+                  <option value="04:00 PM">04:00 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-[11px] font-bold text-slate-700">Complete Address</label>
+                <button onclick="openPinMapModal()" type="button" id="pinMapBtn" class="text-[10px] font-bold text-[#5c3cd6] bg-violet-50 border border-violet-200 px-2.5 py-1 rounded-full flex items-center gap-1 active:scale-95">
+                  <span>📌</span>
+                  <span>Pin on Map</span>
+                </button>
+              </div>
+              <textarea id="custAddr" rows="3" required placeholder="Flat / House No, Landmark, Nanakramguda, Hyderabad" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]"></textarea>
+              <p id="locStatus" class="text-[10px] text-slate-500 mt-1 hidden"></p>
+            </div>
+          </div>
+        </main>
+
+        <div class="sticky bottom-0 z-40 bg-white border-t border-slate-200 p-4 shadow-md max-w-md mx-auto w-full mt-4">
+          <button onclick="sendFinalWhatsAppBooking()" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md active:scale-95 transition">
+            Confirm Booking via WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= POPUP: PIN-DROP MAP MODAL ================= -->
+  <div id="pinMapModal" class="fixed inset-0 z-50 bg-black/65 hidden flex-col justify-end">
+    <div class="bg-white rounded-t-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden max-w-md mx-auto w-full">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h3 class="text-xs font-bold text-slate-900">Select Current or Any Location</h3>
+          <p class="text-[10px] text-slate-500">Auto-detects current location or search/tap on map</p>
+        </div>
+        <button onclick="closePinMapModal()" type="button" class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+      </div>
+
+      <div class="p-3 space-y-2.5 text-xs">
+        <!-- Search & Current GPS Pin inside Map Modal -->
+        <div class="flex gap-1.5">
+          <input type="text" id="mapSearchInput" placeholder="Search area, street or landmark..." onkeydown="if(event.key==='Enter'){searchLocationOnMap();}" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
+          <button onclick="searchLocationOnMap()" type="button" class="bg-slate-800 text-white font-bold px-3 py-1.5 rounded-xl text-[11px]">
+            Search
+          </button>
+          <button onclick="centerMapToCurrentLocation()" type="button" class="bg-sky-50 text-sky-700 border border-sky-200 font-bold px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 active:scale-95" title="Use Current Location">
+            <span>📍</span>
+            <span>GPS</span>
+          </button>
+        </div>
+
+        <div id="leafletPinMap" class="w-full h-60 rounded-xl border border-slate-200 z-10"></div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10.5px] text-slate-700 flex items-center justify-between">
+          <span class="font-semibold">Selected Pin:</span>
+          <span id="pinCoordsText" class="font-bold text-[#5c3cd6]">17.419000, 78.348900</span>
+        </div>
+        <p id="modalPinAddressText" class="text-[10px] text-slate-500 px-1 truncate">Detecting current location or search/tap on map</p>
+      </div>
+
+      <div class="p-3.5 border-t border-slate-100 bg-white flex gap-2">
+        <button onclick="closePinMapModal()" type="button" class="w-1/3 bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl text-xs">
+          Cancel
+        </button>
+        <button onclick="confirmPinnedLocation()" type="button" class="w-2/3 bg
