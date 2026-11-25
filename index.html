@@ -1,376 +1,345 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Full Home deep cleaning service - Hyderabad</title>
+<title>Full Home Deep Cleaning Service</title>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; }
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  #map { height: 240px; width: 100%; border-radius: 12px; z-index: 1; }
-</style>
-</head>
-<body class="pb-24">
-
-  <!-- Top Header -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between shadow-sm">
-    <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#5c3cd6] to-indigo-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-sm">FH</div>
-      <div class="min-w-0">
-        <h1 class="text-sm font-extrabold text-slate-900 truncate">Full Home deep cleaning service</h1>
-        <p class="text-[11px] text-slate-500 truncate">Nanakramguda, Tellapur & Hyderabad</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-1.5 shrink-0">
-      <a href="tel:+919908093964" class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center text-sm" title="Call">📞</a>
-      <a href="https://wa.me/919908093964" target="_blank" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm" title="WhatsApp">💬</a>
-      <button onclick="openCart()" class="relative bg-[#5c3cd6] text-white px-2.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
-        🛒 <span id="topCartCount">0</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Sub-banner -->
-  <div class="bg-indigo-50 border-b border-indigo-100 px-3.5 py-1.5 flex items-center justify-between text-[11px]">
-    <span class="font-bold text-indigo-900">Full Home / By Room Deep Cleaning</span>
-    <span class="font-semibold text-amber-700">⚡ Instant GPS Booking</span>
-  </div>
-
-  <!-- Main Content -->
-  <main class="max-w-xl mx-auto p-3.5 space-y-5">
-
-    <!-- Category Pills -->
-    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-      <a href="#full-home" class="shrink-0 bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">🏠 Full Home</a>
-      <a href="#villa" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">🏡 Villa</a>
-      <a href="#room-wise" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">✨ Kitchen & Rooms</a>
-      <a href="#about" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">ℹ️ About Us</a>
-    </div>
-
-    <!-- Full Home Packages -->
-    <section id="full-home" class="space-y-3">
-      <h2 class="text-base font-extrabold text-slate-900">Full Home & Post-Construction Deep Cleaning</h2>
-      <div id="fullHomeList" class="space-y-3"></div>
-    </section>
-
-    <!-- Villa Packages -->
-    <section id="villa" class="space-y-3">
-      <h2 class="text-base font-extrabold text-slate-900">Independent Villa Deep Cleaning</h2>
-      <div id="villaList" class="space-y-3"></div>
-    </section>
-
-    <!-- Room-Wise Services -->
-    <section id="room-wise" class="space-y-3">
-      <h2 class="text-base font-extrabold text-slate-900">Kitchen & Individual Room Services</h2>
-      <div id="roomList" class="space-y-3"></div>
-    </section>
-
-    <!-- Exclusions Note -->
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900">
-      <strong>Important Note:</strong> Hard paint marks, cement stains, and sticker/gum removal are excluded from standard deep cleaning packages.
-    </div>
-
-    <!-- About Us Section -->
-    <section id="about" class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">ABOUT US</span>
-          <h3 class="text-base font-extrabold text-slate-900">Full Home deep cleaning service</h3>
-        </div>
-        <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold px-2.5 py-1 rounded-full">✓ Trusted Local Team</span>
-      </div>
-      <p class="text-xs text-slate-600 leading-relaxed">
-        We provide professional, reliable, and affordable residential deep cleaning services across <strong>Nanakramguda, Tellapur, Osman Nagar, Aparna CyberOn, Financial District</strong> and surrounding areas in Hyderabad. Using industrial-grade rotary scrubbers, high-suction vacuums, and eco-safe cleaning agents, our trained team ensures spotless, hygienic spaces.
-      </p>
-      <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-bold text-slate-700">
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">🛡️<br>Verified Staff</div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">⚙️<br>Pro Machines</div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">💰<br>Transparent Price</div>
-      </div>
-      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 text-xs">
-        <div class="font-bold text-slate-500 text-[10px] uppercase">Contact & Location</div>
-        <div>📍 <strong>Service Areas:</strong> Nanakramguda, Tellapur, Osman Nagar, Hyderabad</div>
-        <div>📞 <strong>Phone & WhatsApp:</strong> +91 99080 93964</div>
-        <div>✉️ <strong>Email:</strong> kayasuddinmazumder@gmail.com</div>
-      </div>
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <a href="tel:+919908093964" class="bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs text-center">📞 Call Now</a>
-        <a href="https://wa.me/919908093964" target="_blank" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs text-center">💬 WhatsApp Chat</a>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Floating Bottom Cart Bar -->
-  <div id="bottomBar" class="hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-200 p-3 shadow-lg">
-    <div class="max-w-xl mx-auto flex items-center justify-between">
-      <div>
-        <span id="bottomCount" class="text-xs font-bold text-slate-500 block">0 Items</span>
-        <span id="bottomTotal" class="text-base font-extrabold text-slate-900">₹0</span>
-      </div>
-      <button onclick="openCart()" class="bg-[#5c3cd6] text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow">
-        Proceed to Book (GPS) ➔
-      </button>
-    </div>
-  </div>
-
-  <!-- Checkout & GPS Modal -->
-  <div id="cartModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs overflow-y-auto p-3">
-    <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-xl overflow-hidden my-4">
-      <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
-        <h3 class="text-sm font-extrabold">Complete Your Booking</h3>
-        <button onclick="closeCart()" class="text-slate-300 hover:text-white text-lg font-bold">✕</button>
-      </div>
-
-      <div class="p-4 space-y-4">
-        <!-- Selected Items -->
-        <div>
-          <h4 class="text-xs font-extrabold text-slate-500 uppercase mb-2">Selected Services</h4>
-          <div id="cartItemsList" class="divide-y divide-slate-100 border border-slate-200 rounded-xl px-3 text-xs"></div>
-          <div class="flex justify-between items-center pt-2 font-extrabold text-sm">
-            <span>Total Estimate</span>
-            <span id="modalTotal" class="text-[#5c3cd6]">₹0</span>
-          </div>
-        </div>
-
-        <!-- Customer Details -->
-        <div class="space-y-2.5">
-          <h4 class="text-xs font-extrabold text-slate-500 uppercase">Customer Details</h4>
-          <input id="custName" type="text" placeholder="Your Full Name *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
-          <input id="custPhone" type="tel" placeholder="Mobile / WhatsApp Number *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
-          <div class="grid grid-cols-2 gap-2">
-            <input id="bookDate" type="date" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs">
-            <select id="bookSlot" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs">
-              <option value="8:00 AM - 10:00 AM">8:00 AM - 10:00 AM</option>
-              <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
-              <option value="12:00 PM - 2:00 PM">12:00 PM - 2:00 PM</option>
-              <option value="2:00 PM - 5:00 PM">2:00 PM - 5:00 PM</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Auto-GPS Location Section -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <h4 class="text-xs font-extrabold text-slate-500 uppercase">Service Location (Auto GPS)</h4>
-            <button type="button" onclick="detectGPS()" class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-xs flex items-center gap-1">
-              📍 Detect My GPS
-            </button>
-          </div>
-          <p id="gpsStatus" class="text-[11px] text-slate-500">Tap "Detect My GPS" or tap directly on the map to pin your home.</p>
-          <div id="map"></div>
-          <input id="custAddress" type="text" placeholder="Flat / House No., Building / Society Name, Area *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
-        </div>
-
-        <button onclick="submitBooking()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md">
-          💬 Confirm Booking on WhatsApp ➔
-        </button>
-      </div>
-    </div>
-  </div>
-
 <script>
-const SERVICES = [
-  { id: '1bhk-un', cat: 'full-home', name: '1 BHK Unfurnished Deep Cleaning', desc: '1 Hall, 1 Kitchen, 1 Bathroom, 1 Balcony (Empty Flat)', price: 2499 },
-  { id: '1bhk-fu', cat: 'full-home', name: '1 BHK Furnished Deep Cleaning', desc: '1 Hall, 1 Kitchen, 1 Bathroom, 1 Balcony (With Furniture)', price: 3299 },
-  { id: '2bhk-un', cat: 'full-home', name: '2 BHK Unfurnished Deep Cleaning', desc: '2 Bedrooms, 1 Hall, Kitchen, 2 Bathrooms, 2 Balconies (Empty)', price: 3299 },
-  { id: '2bhk-fu', cat: 'full-home', name: '2 BHK Furnished Deep Cleaning', desc: '2 Bedrooms, Hall, Kitchen, 2 Bathrooms, 2 Balconies (Furnished)', price: 4499 },
-  { id: '3bhk-un', cat: 'full-home', name: '3 BHK Unfurnished Deep Cleaning', desc: '3 Bedrooms, 1 Hall, Kitchen, 3 Bathrooms, 3 Balconies (Empty)', price: 4499 },
-  { id: '3bhk-fu', cat: 'full-home', name: '3 BHK Furnished Deep Cleaning', desc: '3 Bedrooms, Hall, Kitchen, 3 Bathrooms, 3 Balconies (Furnished)', price: 5499 },
-  { id: '4bhk-un', cat: 'full-home', name: '4 BHK Unfurnished Deep Cleaning', desc: '4 Bedrooms, Hall, Kitchen, 4 Bathrooms, 4 Balconies (Empty)', price: 5499 },
-  { id: '4bhk-fu', cat: 'full-home', name: '4 BHK Furnished Deep Cleaning', desc: '4 Bedrooms, Hall, Kitchen, 4 Bathrooms, 4 Balconies (Furnished)', price: 6999 },
-  { id: 'villa-std', cat: 'villa', name: 'Independent Villa Deep Cleaning (Up to 2500 sq.ft)', desc: 'Duplex / Multi-Floor Full Villa Scrubbing & Sanitization (₹5/sq.ft)', price: 11999 },
-  { id: 'kitchen', cat: 'room-wise', name: 'Kitchen Deep Cleaning', desc: 'Chimney outer, stove, tiles, cabinets, sink & exhaust degreasing', price: 1499 },
-  { id: 'living', cat: 'room-wise', name: 'Living Room & Sofa Shampooing', desc: 'Dry vacuuming, wet sofa shampooing, floor scrubbing & dusting', price: 699 },
-  { id: 'balcony', cat: 'room-wise', name: 'Balcony Deep Cleaning', desc: 'Floor scrubbing, railing, glass & pigeon net/wall washing', price: 499 },
-  { id: 'bath', cat: 'room-wise', name: 'Bathroom Deep Cleaning & Descaling', desc: 'Hard water stain removal, tiles, commode, sink & tap polishing', price: 399 },
-  { id: 'window', cat: 'room-wise', name: 'Window Glass, Grill & Track Cleaning', desc: 'Sliding channels, mesh, glass & iron grill deep cleaning', price: 199 },
-  { id: 'ceiling', cat: 'room-wise', name: 'Ceiling Dusting & Cobweb Removal', desc: 'Full home ceiling, fans & light fixture dry dusting', price: 199 }
-];
+window.services = {
+  '1bhk_unf': { name: '1 BHK Unfurnished', price: 2499, sub: '1 Hall, 1 Kitchen, 1 Bath, 1 Balcony (Empty)', fur: false, count: 0 },
+  '1bhk_fur': { name: '1 BHK Furnished', price: 3299, sub: '1 Hall, 1 Kitchen, 1 Bath, 1 Balcony (Furnished)', fur: true, count: 0 },
+  '2bhk_unf': { name: '2 BHK Unfurnished', price: 3299, sub: '2 Beds, 1 Hall, Kitchen, 2 Baths, 2 Balconies (Empty)', fur: false, count: 0 },
+  '2bhk_fur': { name: '2 BHK Furnished', price: 4499, sub: '2 Beds, Hall, Kitchen, 2 Baths, 2 Balconies (Furnished)', fur: true, count: 0 },
+  '3bhk_unf': { name: '3 BHK Unfurnished', price: 4499, sub: '3 Beds, 1 Hall, Kitchen, 3 Baths, 3 Balconies (Empty)', fur: false, count: 0 },
+  '3bhk_fur': { name: '3 BHK Furnished', price: 5499, sub: '3 Beds, Hall, Kitchen, 3 Baths, 3 Balconies (Furnished)', fur: true, count: 0 },
+  '4bhk_unf': { name: '4 BHK Unfurnished', price: 5499, sub: '4 Beds, Hall, Kitchen, 4 Baths, 4 Balconies (Empty)', fur: false, count: 0 },
+  '4bhk_fur': { name: '4 BHK Furnished', price: 6999, sub: '4 Beds, Hall, Kitchen, 4 Baths, 4 Balconies (Furnished)', fur: true, count: 0 },
+  'villa_deep': { name: 'Luxury Independent Villa Deep Cleaning', price: 7500, sqFt: 1500, sub: 'Multi-Floor Independent House / Duplex Villa', fur: false, count: 0 },
+  'kitchen': { name: 'Kitchen Deep Clean', price: 1499, sub: 'Chimney, stove, sink & tile degrease', fur: false, count: 0 },
+  'bathroom': { name: 'Bathroom Deep Clean', price: 399, sub: 'Tile descaling & commode deep wash', fur: false, count: 0 },
+  'living': { name: 'Living Room & Sofa', price: 699, sub: 'Sofa shampooing & floor polish', fur: true, count: 0 },
+  'window': { name: 'Window Glass & Grill', price: 199, sub: 'Squeegee wiper & track suction', fur: false, count: 0 },
+  'addon_ceiling': { name: 'Ceiling dusting & cobweb cleaning', price: 199, sub: 'Add-on service', fur: false, count: 0 },
+  'addon_sofa': { name: 'Sofa & upholstery wet shampooing', price: 149, sub: 'Add-on service', fur: false, count: 0 },
+  'addon_balcony': { name: 'Balcony deep cleaning', price: 499, sub: 'Add-on service', fur: false, count: 0 }
+};
 
-let cart = {};
-let map, marker;
-let selectedLat = 17.4165, selectedLng = 78.3422;
+window.authOtp = '';
+window.isAuth = false;
+window.userPhone = '';
+window.mapObj = null;
+window.markerObj = null;
+window.pinLat = 17.4190;
+window.pinLng = 78.3489;
+window.pinAddr = '';
 
-function renderServices() {
-  const containers = {
-    'full-home': document.getElementById('fullHomeList'),
-    'villa': document.getElementById('villaList'),
-    'room-wise': document.getElementById('roomList')
-  };
-  Object.values(containers).forEach(el => el.innerHTML = '');
-
-  SERVICES.forEach(s => {
-    const qty = cart[s.id] || 0;
-    const card = document.createElement('div');
-    card.className = 'bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs flex items-center justify-between gap-3';
-    card.innerHTML = `
-      <div class="space-y-1">
-        <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">${s.name}</h3>
-        <p class="text-[11px] text-slate-500 leading-snug">${s.desc}</p>
-        <div class="text-sm font-black text-[#5c3cd6] pt-0.5">₹${s.price.toLocaleString('en-IN')}</div>
-      </div>
-      <div class="shrink-0">
-        ${qty === 0
-          ? `<button onclick="updateQty('${s.id}', 1)" class="bg-indigo-50 text-[#5c3cd6] border border-indigo-200 font-extrabold text-xs px-4 py-2 rounded-xl">+ Add</button>`
-          : `<div class="flex items-center bg-[#5c3cd6] text-white rounded-xl overflow-hidden text-xs font-extrabold">
-               <button onclick="updateQty('${s.id}', -1)" class="px-2.5 py-1.5">−</button>
-               <span class="px-2">${qty}</span>
-               <button onclick="updateQty('${s.id}', 1)" class="px-2.5 py-1.5">+</button>
-             </div>`
-        }
-      </div>
-    `;
-    containers[s.cat].appendChild(card);
-  });
-  updateCartUI();
-}
-
-function updateQty(id, delta) {
-  cart[id] = (cart[id] || 0) + delta;
-  if (cart[id] <= 0) delete cart[id];
-  renderServices();
-  if (!document.getElementById('cartModal').classList.contains('hidden')) renderModalCart();
-}
-
-function updateCartUI() {
-  let count = 0, total = 0;
-  Object.entries(cart).forEach(([id, q]) => {
-    const item = SERVICES.find(s => s.id === id);
-    if (item) { count += q; total += item.price * q; }
-  });
-  document.getElementById('topCartCount').innerText = count;
-  document.getElementById('bottomCount').innerText = `${count} Service${count > 1 ? 's' : ''} Selected`;
-  document.getElementById('bottomTotal').innerText = `₹${total.toLocaleString('en-IN')}`;
-  document.getElementById('modalTotal').innerText = `₹${total.toLocaleString('en-IN')}`;
-  document.getElementById('bottomBar').classList.toggle('hidden', count === 0);
-}
-
-function openCart() {
-  if (Object.keys(cart).length === 0) {
-    alert('Please add at least one cleaning service first.');
-    return;
+window.getTotal = function() {
+  var t = 0;
+  for (var k in window.services) {
+    if (window.services[k].count > 0) t += window.services[k].price * window.services[k].count;
   }
-  renderModalCart();
-  document.getElementById('cartModal').classList.remove('hidden');
-  setTimeout(initMap, 200);
-}
+  return t;
+};
 
-function closeCart() {
-  document.getElementById('cartModal').classList.add('hidden');
-}
-
-function renderModalCart() {
-  const list = document.getElementById('cartItemsList');
-  list.innerHTML = '';
-  Object.entries(cart).forEach(([id, q]) => {
-    const item = SERVICES.find(s => s.id === id);
-    if (!item) return;
-    list.innerHTML += `
-      <div class="py-2 flex justify-between items-center">
-        <div>
-          <span class="font-bold text-slate-900">${item.name}</span>
-          <span class="text-slate-500 block">₹${item.price} × ${q}</span>
-        </div>
-        <span class="font-extrabold text-slate-900">₹${(item.price * q).toLocaleString('en-IN')}</span>
-      </div>
-    `;
-  });
-}
-
-function initMap() {
-  if (!map) {
-    map = L.map('map').setView([selectedLat, selectedLng], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-    marker = L.marker([selectedLat, selectedLng], { draggable: true }).addTo(map);
-    marker.on('dragend', () => {
-      const pos = marker.getLatLng();
-      selectedLat = pos.lat.toFixed(6);
-      selectedLng = pos.lng.toFixed(6);
-      document.getElementById('gpsStatus').innerText = `📍 Pinned: ${selectedLat}, ${selectedLng}`;
-    });
-    map.on('click', (e) => {
-      selectedLat = e.latlng.lat.toFixed(6);
-      selectedLng = e.latlng.lng.toFixed(6);
-      marker.setLatLng([selectedLat, selectedLng]);
-      document.getElementById('gpsStatus').innerText = `📍 Pinned: ${selectedLat}, ${selectedLng}`;
-    });
-  } else {
-    map.invalidateSize();
+window.syncUI = function() {
+  var c = 0;
+  for (var k in window.services) {
+    var s = window.services[k];
+    c += s.count;
+    var btn = document.getElementById('btn-' + k);
+    if (btn) {
+      if (k === 'villa_deep') btn.textContent = s.count > 0 ? 'Added ✓' : '+ Add Villa Clean';
+      else if (k.indexOf('addon_') === 0) btn.textContent = s.count > 0 ? '✓ Added' : 'Add';
+      else btn.textContent = s.count > 0 ? '✓' : '+ Add';
+      btn.style.backgroundColor = s.count > 0 ? '#5c3cd6' : '';
+      btn.style.color = s.count > 0 ? '#ffffff' : '';
+    }
   }
-}
+  var tot = window.getTotal();
+  var bar = document.getElementById('homeBottomBar');
+  if (bar) bar.style.display = c > 0 ? 'flex' : 'none';
+  if (document.getElementById('bottomTotalPrice')) document.getElementById('bottomTotalPrice').textContent = '₹' + tot.toLocaleString('en-IN');
+  if (document.getElementById('bottomItemCount')) document.getElementById('bottomItemCount').textContent = c + (c === 1 ? ' service' : ' services');
+  if (document.getElementById('navCartCount')) document.getElementById('navCartCount').textContent = c;
+  if (document.getElementById('billFinalAmount')) document.getElementById('billFinalAmount').textContent = '₹' + tot.toLocaleString('en-IN');
+  if (document.getElementById('billItemTotal')) document.getElementById('billItemTotal').textContent = '₹' + tot.toLocaleString('en-IN');
+};
 
-function detectGPS() {
-  const status = document.getElementById('gpsStatus');
-  if (!navigator.geolocation) {
-    status.innerText = '❌ GPS not supported on this browser.';
-    return;
-  }
-  status.innerText = '⏳ Detecting your exact GPS location...';
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      selectedLat = pos.coords.latitude.toFixed(6);
-      selectedLng = pos.coords.longitude.toFixed(6);
-      if (map && marker) {
-        map.setView([selectedLat, selectedLng], 17);
-        marker.setLatLng([selectedLat, selectedLng]);
-      }
-      status.innerHTML = `<span class="text-emerald-700 font-bold">✅ GPS Location Locked: ${selectedLat}, ${selectedLng}</span>`;
-    },
-    (err) => {
-      status.innerText = '⚠️ Please turn ON phone Location (GPS) and tap Allow.';
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-}
+window.toggleItem = function(key) {
+  if (!window.services[key]) return;
+  window.services[key].count = window.services[key].count > 0 ? 0 : 1;
+  window.syncUI();
+  if (!document.getElementById('cartScreen').classList.contains('hidden')) window.renderCart();
+};
 
-function submitBooking() {
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const date = document.getElementById('bookDate').value;
-  const slot = document.getElementById('bookSlot').value;
-  const addr = document.getElementById('custAddress').value.trim();
+window.updateVilla = function(val) {
+  var sq = parseInt(val) || 500;
+  window.services['villa_deep'].sqFt = sq;
+  window.services['villa_deep'].price = sq * 5;
+  var el = document.getElementById('price-display-villa_deep');
+  if (el) el.textContent = '₹' + window.services['villa_deep'].price.toLocaleString('en-IN');
+  window.syncUI();
+};
 
-  if (!name || !phone || !addr) {
-    alert('Please enter your Name, Phone Number, and Flat/Building Address.');
-    return;
-  }
+window.goAbout = function() {
+  window.showScreen('catalogScreen');
+  var ab = document.getElementById('aboutSection');
+  var sc = document.getElementById('catalogScreen');
+  if (ab && sc) sc.scrollTop = ab.offsetTop - 15;
+};
 
-  let itemsText = '', total = 0;
-  Object.entries(cart).forEach(([id, q]) => {
-    const item = SERVICES.find(s => s.id === id);
-    if (item) {
-      itemsText += `• ${item.name} (x${q}) - ₹${item.price * q}\n`;
-      total += item.price * q;
+window.showScreen = function(id) {
+  ['catalogScreen', 'cartScreen', 'addressScreen'].forEach(function(s) {
+    var el = document.getElementById(s);
+    if (el) {
+      if (s === id) el.classList.remove('hidden');
+      else el.classList.add('hidden');
     }
   });
+  if (id === 'catalogScreen') window.syncUI();
+  else document.getElementById('homeBottomBar').style.display = 'none';
+};
 
-  const mapLink = `https://www.google.com/maps?q=${selectedLat},${selectedLng}`;
-  const msg = `*New Booking - Full Home deep cleaning service*\n\n` +
-              `*Name:* ${name}\n` +
-              `*Phone:* ${phone}\n` +
-              `*Date & Slot:* ${date || 'Flexible'} (${slot})\n` +
-              `*Address:* ${addr}\n` +
-              `*GPS Pin:* ${mapLink}\n\n` +
-              `*Selected Services:*\n${itemsText}\n` +
-              `*Total Estimate:* ₹${total.toLocaleString('en-IN')}\n` +
-              `_(Note: Paint/cement/sticker stains excluded)_`;
+window.openCart = function() {
+  var c = 0;
+  for (var k in window.services) c += window.services[k].count;
+  if (c === 0) { alert('Please add at least 1 service first.'); return; }
+  window.renderCart();
+  window.showScreen('cartScreen');
+};
 
-  window.open(`https://wa.me/919908093964?text=${encodeURIComponent(msg)}`, '_blank');
-}
+window.renderCart = function() {
+  var box = document.getElementById('cartScreenItems');
+  if (!box) return;
+  var html = '';
+  for (var k in window.services) {
+    var s = window.services[k];
+    if (s.count > 0) {
+      html += '<div class="py-3 flex justify-between items-start">' +
+        '<div><h4 class="text-sm font-bold text-slate-900">' + s.name + '</h4>' +
+        '<p class="text-xs text-slate-500">' + s.sub + '</p></div>' +
+        '<div class="text-right"><span class="text-sm font-bold text-slate-900 block">₹' + s.price.toLocaleString('en-IN') + '</span>' +
+        '<button onclick="window.toggleItem(\'' + k + '\')" type="button" class="text-rose-500 font-bold text-xs mt-1 bg-rose-50 px-2.5 py-1 rounded">Remove</button></div></div>';
+    }
+  }
+  box.innerHTML = html;
+  window.syncUI();
+};
 
-document.getElementById('bookDate').valueAsDate = new Date(Date.now() + 86400000);
-renderServices();
+window.openDetails = function(key) {
+  var s = window.services[key];
+  if (!s) return;
+  document.getElementById('detailModalTitle').textContent = s.name;
+  document.getElementById('detailModalSubtitle').textContent = s.sub;
+  document.getElementById('detailModalPrice').textContent = '₹' + s.price.toLocaleString('en-IN');
+  var scopeHtml = s.fur
+    ? '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">' +
+      '<p>✓ Single-disc rotary machine floor scrubbing & buffing</p>' +
+      '<p>✓ Sofa & mattress dry vacuum dust extraction</p>' +
+      '<p>✓ Bathroom hard water descaling, commode & taps mirror polish</p>' +
+      '<p>✓ Kitchen exterior cabinets, stove & tiles degreasing</p>' +
+      '<p>✓ Balcony wash, grills, windows, fans & cobweb removal</p></div>'
+    : '<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">' +
+      '<p>✓ Industrial rotary machine floor scrubbing & stain removal</p>' +
+      '<p>✓ Inside & outside cleaning of all empty cabinets & wardrobes</p>' +
+      '<p>✓ Bathroom tiles descaling, commode deep wash & chrome polish</p>' +
+      '<p>✓ Kitchen platform, sink, tiles & exhaust degreasing</p>' +
+      '<p>✓ Windows, grills, slider tracks, balcony & cobweb cleaning</p></div>';
+  document.getElementById('detailSectionsContainer').innerHTML = scopeHtml;
+  var nb = document.getElementById('furnishedNoticeBlock');
+  if (s.fur) nb.classList.remove('hidden'); else nb.classList.add('hidden');
+  document.getElementById('detailsModalBackdrop').classList.remove('hidden');
+};
+
+window.closeDetails = function() {
+  document.getElementById('detailsModalBackdrop').classList.add('hidden');
+};
+
+window.openAuth = function() {
+  if (window.isAuth) { window.goAddress(); return; }
+  document.getElementById('sheetOtpBlock').classList.add('hidden');
+  document.getElementById('sheetContinueBtn').textContent = 'Continue';
+  document.getElementById('phoneAuthModal').classList.remove('hidden');
+};
+
+window.closeAuth = function() {
+  document.getElementById('phoneAuthModal').classList.add('hidden');
+};
+
+window.stepAuth = function() {
+  var ph = document.getElementById('sheetPhoneInput').value.trim();
+  if (!/^\d{10}$/.test(ph)) { alert('Enter a valid 10-digit mobile number.'); return; }
+  var otpBox = document.getElementById('sheetOtpBlock');
+  if (otpBox.classList.contains('hidden')) {
+    window.userPhone = ph;
+    window.authOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    document.getElementById('sheetCodeDisplay').textContent = window.authOtp;
+    otpBox.classList.remove('hidden');
+    document.getElementById('sheetContinueBtn').textContent = 'Verify & Proceed';
+    return;
+  }
+  if (document.getElementById('sheetOtpInput').value.trim() === window.authOtp) {
+    window.isAuth = true;
+    window.closeAuth();
+    window.goAddress();
+  } else {
+    alert('Incorrect 4-digit code.');
+  }
+};
+
+window.goAddress = function() {
+  window.showScreen('addressScreen');
+  document.getElementById('displayVerifiedPhone').textContent = '+91 ' + window.userPhone;
+  document.getElementById('addressBillTotal').textContent = '₹' + window.getTotal().toLocaleString('en-IN');
+  var dp = document.getElementById('custDate');
+  if (dp && !dp.value) dp.value = new Date().toISOString().split('T')[0];
+};
+
+window.openMap = function() {
+  var m = document.getElementById('pinMapModal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+  setTimeout(function() {
+    if (!window.mapObj && typeof L !== 'undefined') {
+      window.mapObj = L.map('leafletPinMap').setView([window.pinLat, window.pinLng], 16);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.mapObj);
+      window.markerObj = L.marker([window.pinLat, window.pinLng], { draggable: true }).addTo(window.mapObj);
+      window.mapObj.on('click', function(e) { window.setPin(e.latlng.lat, e.latlng.lng); });
+      window.markerObj.on('dragend', function(e) { var p = e.target.getLatLng(); window.setPin(p.lat, p.lng); });
+    } else if (window.mapObj) {
+      window.mapObj.invalidateSize();
+    }
+    window.gpsMap();
+  }, 150);
+};
+
+window.setPin = function(lat, lng) {
+  window.pinLat = lat;
+  window.pinLng = lng;
+  if (window.mapObj && window.markerObj) {
+    window.mapObj.setView([lat, lng], 17);
+    window.markerObj.setLatLng([lat, lng]);
+  }
+  document.getElementById('pinCoordsText').textContent = lat.toFixed(6) + ', ' + lng.toFixed(6);
+  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      window.pinAddr = (d && d.display_name) ? d.display_name : '';
+      document.getElementById('modalPinAddressText').textContent = window.pinAddr || (lat.toFixed(6) + ', ' + lng.toFixed(6));
+    }).catch(function() {});
+};
+
+window.gpsMap = function() {
+  if (!navigator.geolocation) return;
+  document.getElementById('modalPinAddressText').textContent = 'Detecting GPS location...';
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    window.setPin(pos.coords.latitude, pos.coords.longitude);
+  }, function() {
+    document.getElementById('modalPinAddressText').textContent = 'Tap on map or search area above.';
+  }, { enableHighAccuracy: true, timeout: 8000 });
+};
+
+window.searchMap = function() {
+  var q = document.getElementById('mapSearchInput').value.trim();
+  if (!q) return;
+  fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.length > 0) window.setPin(parseFloat(d[0].lat), parseFloat(d[0].lon));
+      else alert('Location not found.');
+    }).catch(function() {});
+};
+
+window.confirmMap = function() {
+  var link = 'https://www.google.com/maps?q=' + window.pinLat.toFixed(6) + ',' + window.pinLng.toFixed(6);
+  document.getElementById('custMapLink').value = link;
+  if (window.pinAddr) {
+    document.getElementById('custArea').value = window.pinAddr;
+  }
+  document.getElementById('pinMapModal').classList.add('hidden');
+  document.getElementById('pinMapModal').classList.remove('flex');
+};
+
+window.sendWhatsApp = function() {
+  var name = document.getElementById('custName').value.trim();
+  var date = document.getElementById('custDate').value;
+  var slot = document.getElementById('custSlot').value;
+  var apt = document.getElementById('custApt').value.trim();
+  var block = document.getElementById('custBlock').value.trim();
+  var flat = document.getElementById('custFlat').value.trim();
+  var area = document.getElementById('custArea').value.trim();
+  var mapLink = document.getElementById('custMapLink').value.trim();
+
+  if (!name) { alert('Please enter your Full Name.'); document.getElementById('custName').focus(); return; }
+  if (!apt) { alert('Please enter Apartment / Building Name.'); document.getElementById('custApt').focus(); return; }
+  if (!flat) { alert('Please enter Flat / Door Number.'); document.getElementById('custFlat').focus(); return; }
+  if (!area) { alert('Please pin location or enter Area / Landmark.'); document.getElementById('custArea').focus(); return; }
+
+  var items = [];
+  for (var k in window.services) {
+    if (window.services[k].count > 0) items.push(window.services[k].name + ' (₹' + window.services[k].price + ')');
+  }
+  var msg = '*New Booking - Full Home Deep Cleaning Service*\n\n' +
+    '👤 *Customer Name:* ' + name + '\n' +
+    '📱 *Verified Phone:* ' + window.userPhone + '\n' +
+    '🧹 *Booked Services:*\n• ' + items.join('\n• ') + '\n\n' +
+    '💰 *Total Amount:* ₹' + window.getTotal().toLocaleString('en-IN') + '\n' +
+    '📅 *Date & Time:* ' + date + ' at ' + slot + '\n\n' +
+    '🏢 *Apartment / Society:* ' + apt + '\n' +
+    '🏗️ *Block / Tower:* ' + (block ? block : 'N/A') + '\n' +
+    '🚪 *Flat / Door No.:* ' + flat + '\n' +
+    '📍 *Area / Landmark:* ' + area + '\n' +
+    (mapLink ? '🗺️ *Google Maps Link:* ' + mapLink : '');
+
+  window.open('https://wa.me/919908093964?text=' + encodeURIComponent(msg), '_blank');
+};
 </script>
-</body>
-</html>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; background: #f8fafc; font-size: 16px; }
+  .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; position: relative; overflow: hidden; }
+  .app-scrollable-body { flex: 1 1 auto; overflow-y: scroll; -webkit-overflow-scrolling: touch; padding-bottom: 95px; scroll-behavior: smooth; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <div class="app-container">
+    <header class="flex-shrink-0 bg-white border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between z-30">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm">FH</div>
+        <div>
+          <h1 class="text-sm font-bold leading-tight text-slate-900">Full Home Deep Cleaning Service</h1>
+          <p class="text-[11px] text-slate-500 font-medium">Nanakramguda, Hyderabad</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="window.goAbout()" type="button" class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold">About</button>
+        <a href="tel:+919908093964" class="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm">📞</a>
+        <a href="https://wa.me/919908093964?text=Hello%20Full%20Home%20Deep%20Cleaning%20Service" target="_blank" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm">💬</a>
+        <button onclick="window.openCart()" type="button" class="bg-slate-100 text-slate-800 px-2.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1">
+          <span>🛒</span><span id="navCartCount" class="bg-[#5c3cd6] text-white text-[11px] font-bold px-1.5 rounded-full">0</span>
+        </button>
+      </div>
+    </header>
+
+    <div id="catalogScreen" class="app-scrollable-body">
+      <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between text-xs text-slate-600">
+        <span class="font-bold">Full Home / By Room Cleaning</span>
+        <span class="text-slate-500 text-[11px]">⚡ Earliest: Tomorrow, 8:00 AM</span>
+      </div>
+
+      <div class="pt-3 px-3">
+        <h3 class="text-sm font-bold text-slate-800 mb-2">People also take</h3>
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
+          <div class="min-w-[135px] w-[135px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
+            <span class="text-xs font-bold text-slate-900 leading-tight block">Ceiling dusting & cobweb cleaning</span>
+            <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+              <span class="text-xs font-extrabold">₹199</span>
+              <button id="btn-addon_ceiling" onclick="window.toggleItem('addon_ceiling')" type="button" class="text-xs font-bold px-2.5 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            </div>
+          </div>
+          <div class="min-w-[135px] w-[135px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
+            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=250&q=80" class="w-full h-1
