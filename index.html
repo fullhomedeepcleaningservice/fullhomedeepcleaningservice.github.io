@@ -143,27 +143,141 @@ window.openDetails = function(key) {
   document.getElementById('detailModalTitle').textContent = s.name;
   document.getElementById('detailModalSubtitle').textContent = s.sub;
   document.getElementById('detailModalPrice').textContent = '₹' + s.price.toLocaleString('en-IN');
-  var scopeHtml = s.fur
-    ? '<div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1 text-[11px] text-slate-700">' +
-      '<p>✓ Single-disc rotary machine floor scrubbing & buffing</p>' +
-      '<p>✓ Sofa & mattress dry vacuum dust extraction</p>' +
-      '<p>✓ Bathroom hard water descaling, commode & taps mirror polish</p>' +
-      '<p>✓ Kitchen exterior cabinets, stove & tiles degreasing</p>' +
-      '<p>✓ Balcony wash, grills, windows, fans & cobweb removal</p></div>'
-    : '<div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1 text-[11px] text-slate-700">' +
-      '<p>✓ Industrial rotary machine floor scrubbing & stain removal</p>' +
-      '<p>✓ Inside & outside cleaning of all empty cabinets & wardrobes</p>' +
-      '<p>✓ Bathroom tiles descaling, commode deep wash & chrome polish</p>' +
-      '<p>✓ Kitchen platform, sink, tiles & exhaust degreasing</p>' +
-      '<p>✓ Windows, grills, slider tracks, balcony & cobweb cleaning</p></div>';
-  document.getElementById('detailSectionsContainer').innerHTML = scopeHtml;
-  var nb = document.getElementById('furnishedNoticeBlock');
-  if (s.fur) nb.classList.remove('hidden'); else nb.classList.add('hidden');
-  document.getElementById('detailsModalBackdrop').classList.remove('hidden');
+
+  var sections = [];
+  if (key === 'kitchen') {
+    sections = [
+      {
+        title: 'Kitchen Deep Cleaning Scope',
+        img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
+        items: [
+          'Chimney outer hood, filters & exhaust fan degreasing',
+          'Gas stove, burner, countertop & wall tiles oil stain removal',
+          'Sink descaling, tap mirror polishing & drain sanitization',
+          'Cabinets exterior wiping & rotary machine floor scrubbing'
+        ]
+      }
+    ];
+  } else if (key === 'bathroom') {
+    sections = [
+      {
+        title: 'Bathroom Deep Cleaning Scope',
+        img: 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=600&q=80',
+        items: [
+          'Wall & floor tiles hard-water scale & yellow stain removal',
+          'Commode, washbasin & shower area deep sanitization',
+          'Chrome taps, shower head & mirror polishing',
+          'Exhaust fan, window louvers & door wiping'
+        ]
+      }
+    ];
+  } else if (key === 'living') {
+    sections = [
+      {
+        title: 'Living Room & Sofa Cleaning Scope',
+        img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
+        items: [
+          'Dry vacuuming of sofa, cushions & curtains',
+          'Wet foam shampooing & stain extraction for fabric sofa',
+          'TV unit, center table, fans & cobweb dusting',
+          'Rotary machine floor scrubbing & polishing'
+        ]
+      }
+    ];
+  } else if (key === 'window') {
+    sections = [
+      {
+        title: 'Window Glass & Grill Cleaning Scope',
+        img: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80',
+        items: [
+          'Sliding window tracks vacuuming & mud/dust removal',
+          'Mosquito mesh washing & both-side glass squeegee cleaning',
+          'Safety grill & window sill wet wiping'
+        ]
+      }
+    ];
+  } else {
+    sections = [
+      {
+        title: 'Living Room & Bedrooms',
+        img: s.fur
+          ? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80'
+          : 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=600&q=80',
+        items: s.fur
+          ? [
+              'Single-disc rotary machine floor scrubbing & buffing',
+              'Dry vacuuming of sofas, mattresses, pillows & curtains',
+              'Exterior wiping of wardrobes, beds, TV unit & furniture',
+              'Fans, AC outer, lights & cobweb removal'
+            ]
+          : [
+              'Industrial single-disc rotary machine floor scrubbing',
+              'লিভিং রুম এবং বেডরুমের কাবার্ডের ভেতর ও বাহির সম্পূর্ণ পরিষ্কার করা হবে (Inside & outside cleaning of Living Room & Bedroom cupboards)',
+              'Fans, lights, switchboards & cobweb removal'
+            ]
+      },
+      {
+        title: 'Kitchen Deep Cleaning',
+        img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
+        items: s.fur
+          ? [
+              'Chimney outer, stove, countertop & wall tiles degreasing',
+              'Kitchen cabinets exterior wiping & sink descaling',
+              'Floor machine scrubbing & cobweb removal'
+            ]
+          : [
+              'Chimney outer, stove, countertop & wall tiles degreasing',
+              'Kitchen cabinets inside & outside wiping + sink descaling',
+              'Floor machine scrubbing & cobweb removal'
+            ]
+      },
+      {
+        title: 'Bathrooms, Balconies & Windows',
+        img: 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=600&q=80',
+        items: [
+          'Bathroom tiles hard-water descaling, commode wash & tap polish',
+          'Balcony floor scrubbing, railing & utility washing',
+          'Windows, sliding tracks, mosquito mesh & safety grill cleaning'
+        ]
+      }
+    ];
+  }
+
+  var html = '';
+  sections.forEach(function(sec) {
+    html += '<div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">' +
+      '<img src="' + sec.img + '" class="w-full h-28 object-cover">' +
+      '<div class="p-3 space-y-1.5">' +
+        '<h4 class="font-extrabold text-xs text-slate-900">' + sec.title + '</h4>' +
+        '<ul class="space-y-1 text-[11px] text-slate-700">';
+    sec.items.forEach(function(it) {
+      html += '<li class="flex items-start gap-1.5"><span class="text-emerald-600 font-bold">✓</span><span>' + it + '</span></li>';
+    });
+    html += '</ul></div></div>';
+  });
+
+  if (s.fur) {
+    html += '<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 space-y-1.5 text-[11px] text-amber-950">' +
+      '<p class="font-bold">📌 বিশেষ তথ্য (Furnished):</p>' +
+      '<p>ফার্নিশড বেডরুম (Bedroom), লিভিং রুম (Living Room) বা কিচেন কাবার্ডের ভেতর পরিষ্কার করা যাবে, কিন্তু আগে ফোনে কথা বলতে হবে।</p>' +
+      '<a href="tel:+919908093964" class="block bg-slate-900 text-white font-bold py-2 rounded-lg text-center text-[11px] mt-1">📞 Call Now (+91 99080 93964)</a>' +
+      '</div>';
+  }
+
+  document.getElementById('detailSectionsContainer').innerHTML = html;
+
+  var scrollBox = document.getElementById('detailScrollArea');
+  if (scrollBox) scrollBox.scrollTop = 0;
+
+  var backdrop = document.getElementById('detailsModalBackdrop');
+  backdrop.classList.remove('hidden');
+  backdrop.classList.add('flex');
 };
 
 window.closeDetails = function() {
-  document.getElementById('detailsModalBackdrop').classList.add('hidden');
+  var backdrop = document.getElementById('detailsModalBackdrop');
+  backdrop.classList.add('hidden');
+  backdrop.classList.remove('flex');
 };
 
 window.openAuth = function() {
@@ -592,7 +706,7 @@ window.sendWhatsApp = function() {
     </main>
   </div>
 
-  <!-- Fixed Bottom Cart Bar (Always visible when items added) -->
+  <!-- Fixed Bottom Cart Bar -->
   <div id="homeBottomBar" style="display: none;" class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-indigo-100 px-4 py-3 shadow-[0_-6px_20px_rgba(0,0,0,0.12)] flex items-center justify-between max-w-xl mx-auto">
     <div>
       <span id="bottomTotalPrice" class="text-base font-black text-slate-900 block leading-tight">₹0</span>
@@ -618,7 +732,7 @@ window.sendWhatsApp = function() {
     </main>
   </div>
 
-  <!-- Screen 3: Address Screen (Separate Apartment, Block & Door No.) -->
+  <!-- Screen 3: Address Screen -->
   <div id="addressScreen" class="bg-white hidden min-h-screen pb-20">
     <div class="sticky top-12 z-20 bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3">
       <button onclick="window.showScreen('cartScreen')" type="button" class="font-extrabold text-base p-1">←</button>
@@ -648,13 +762,11 @@ window.sendWhatsApp = function() {
         </div>
       </div>
 
-      <!-- Separate Apartment Name Field -->
       <div>
         <label class="block text-[11px] font-bold text-slate-700 mb-1">Apartment / Society Name *</label>
         <input type="text" id="custApt" placeholder="e.g. Aparna CyberOn / My Home Vihanga" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold text-slate-900">
       </div>
 
-      <!-- Separate Block & Door Number Fields -->
       <div class="grid grid-cols-2 gap-2.5">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Block / Tower</label>
@@ -695,17 +807,23 @@ window.sendWhatsApp = function() {
     </div>
   </div>
 
-  <!-- Details Modal -->
+  <!-- Scrollable Details Modal -->
   <div id="detailsModalBackdrop" class="fixed inset-0 z-50 bg-black/60 hidden flex-col justify-end">
-    <div class="bg-white rounded-t-3xl p-4 space-y-3 max-w-md mx-auto w-full text-xs">
-      <div class="flex justify-between items-center border-b pb-2">
-        <h3 id="detailModalTitle" class="font-bold"></h3>
-        <button onclick="window.closeDetails()" type="button" class="w-6 h-6 rounded-full bg-slate-100 font-bold">✕</button>
+    <div class="bg-white rounded-t-3xl max-w-md mx-auto w-full text-xs flex flex-col max-h-[82vh]">
+      <div class="flex justify-between items-center border-b px-4 py-3 shrink-0">
+        <h3 id="detailModalTitle" class="font-bold text-sm"></h3>
+        <button onclick="window.closeDetails()" type="button" class="w-7 h-7 rounded-full bg-slate-100 font-bold">✕</button>
       </div>
-      <div class="flex justify-between"><span id="detailModalSubtitle" class="text-slate-500"></span><span id="detailModalPrice" class="font-black"></span></div>
-      <div id="detailSectionsContainer"></div>
-      <div id="furnishedNoticeBlock" class="hidden bg-amber-50 border border-amber-300 rounded-xl p-2 text-[10.5px]">⚠️ Wardrobe interiors are NOT included in furnished package.</div>
-      <button onclick="window.closeDetails()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-2.5 rounded-xl">Done</button>
+      <div id="detailScrollArea" class="p-4 space-y-3 overflow-y-auto flex-1">
+        <div class="flex justify-between items-center">
+          <span id="detailModalSubtitle" class="text-slate-500"></span>
+          <span id="detailModalPrice" class="font-black text-sm text-[#5c3cd6]"></span>
+        </div>
+        <div id="detailSectionsContainer" class="space-y-3"></div>
+      </div>
+      <div class="p-3 border-t shrink-0 bg-white">
+        <button onclick="window.closeDetails()" type="button" class="w-full bg-[#5c3cd6] text-white font-bold py-2.5 rounded-xl">Done</button>
+      </div>
     </div>
   </div>
 
