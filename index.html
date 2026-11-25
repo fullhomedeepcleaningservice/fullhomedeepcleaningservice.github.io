@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Urban Shine - Cleaning Services</title>
+<title>Full Home deep cleaning service - Hyderabad</title>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,351 +12,365 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #f8fafc;
-  }
-  .app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-  .app-scrollable-body {
-    flex: 1 1 auto;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 85px;
-    scroll-behavior: smooth;
-  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  #map { height: 240px; width: 100%; border-radius: 12px; z-index: 1; }
 </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body class="pb-24">
 
-  <div class="app-container">
-
-    <!-- 1. FIXED HEADER -->
-    <header class="flex-shrink-0 bg-white border-b border-slate-200 px-3 py-2 flex items-center justify-between shadow-xs z-30">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-xs">
-          US
-        </div>
-        <div>
-          <h1 class="text-xs sm:text-sm font-bold leading-tight text-slate-900">Urban Shine</h1>
-          <p class="text-[9px] text-slate-400 font-medium">Cleaning Services • Nanakramguda, Hyderabad</p>
-        </div>
+  <!-- Top Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 px-3.5 py-2.5 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#5c3cd6] to-indigo-700 text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-sm">FH</div>
+      <div class="min-w-0">
+        <h1 class="text-sm font-extrabold text-slate-900 truncate">Full Home deep cleaning service</h1>
+        <p class="text-[11px] text-slate-500 truncate">Nanakramguda, Tellapur & Hyderabad</p>
       </div>
-
-      <div class="flex items-center gap-1.5">
-        <button onclick="scrollToAbout()" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-full text-[11px] font-bold transition">
-          About
-        </button>
-        <a href="tel:+919908093964" title="Call Us" class="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm shadow-xs hover:bg-emerald-100 transition active:scale-95">📞</a>
-        <a href="https://wa.me/919908093964?text=Hello%20Urban%20Shine" target="_blank" title="WhatsApp Us" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm shadow-xs hover:bg-emerald-600 transition active:scale-95">💬</a>
-        <button onclick="handleCartClick()" type="button" class="relative bg-slate-100 hover:bg-slate-200 text-slate-800 px-2.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 transition">
-          <span>🛒</span>
-          <span class="hidden sm:inline">Cart</span>
-          <span id="navCartCount" class="bg-[#5c3cd6] text-white text-[10px] font-bold px-1.5 rounded-full">0</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- 2. SCROLLABLE CATALOG BODY -->
-    <div id="catalogScreen" class="app-scrollable-body">
-      <div class="px-4 py-2 bg-slate-100/70 border-b border-slate-200 flex items-center justify-between text-[11px] text-slate-600">
-        <span class="font-bold">Full Home / By Room Cleaning</span>
-        <span class="text-slate-500 text-[10px]">⚡ Earliest slot: Tomorrow, 8:00 AM</span>
-      </div>
-
-      <!-- People also take -->
-      <div class="pt-3 px-3">
-        <h3 class="text-xs font-bold text-slate-800 mb-2">People also take</h3>
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1" id="peopleAlsoTakeContainer"></div>
-      </div>
-
-      <!-- Main Packages Grid -->
-      <main class="max-w-xl mx-auto px-2.5 pt-3 pb-6 space-y-5">
-        <div>
-          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Full Home & Post-Construction Deep Cleaning</h2>
-          <div class="grid grid-cols-2 gap-2.5" id="packagesContainer"></div>
-        </div>
-
-        <div>
-          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Independent Villa Deep Cleaning</h2>
-          <div id="villaContainer"></div>
-        </div>
-
-        <div>
-          <h2 class="text-sm font-bold text-slate-900 mb-2.5 px-0.5">Kitchen & Individual Services</h2>
-          <div class="grid grid-cols-2 gap-2.5" id="singleServicesContainer"></div>
-        </div>
-
-        <!-- ================= ABOUT US & CONTACT SECTION ================= -->
-        <section id="aboutSection" class="pt-2">
-          <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3.5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <div>
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#5c3cd6] block">About Us</span>
-                <h2 class="text-sm font-extrabold text-slate-900 mt-0.5">Urban Shine Cleaning Services</h2>
-              </div>
-              <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                ✓ Trusted Local Team
-              </span>
-            </div>
-
-            <p class="text-xs text-slate-600 leading-relaxed">
-              We provide professional, reliable, and affordable residential and commercial deep cleaning services across <strong>Nanakramguda</strong> and surrounding areas in Hyderabad. Using industrial-grade rotary scrubbers, high-suction vacuums, and eco-safe cleaning agents, our trained team ensures spotless, hygienic spaces for apartments, villas, kitchens, and bathrooms.
-            </p>
-
-            <!-- Highlights -->
-            <div class="grid grid-cols-3 gap-2 pt-1">
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
-                <span class="text-sm block">🛡️</span>
-                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Verified Staff</span>
-              </div>
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
-                <span class="text-sm block">⚙️</span>
-                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Pro Machines</span>
-              </div>
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
-                <span class="text-sm block">💰</span>
-                <span class="text-[10px] font-bold text-slate-800 block mt-0.5">Transparent Price</span>
-              </div>
-            </div>
-
-            <!-- Contact Details -->
-            <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-2.5 text-xs">
-              <h3 class="text-[11px] font-extrabold text-slate-900 uppercase tracking-wide">Contact & Location</h3>
-              
-              <div class="flex items-start gap-2.5">
-                <span class="text-sm">📍</span>
-                <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block">Service Location</span>
-                  <span class="font-bold text-slate-800">Nanakramguda, Financial District, Hyderabad, Telangana</span>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-2.5">
-                <span class="text-sm">📞</span>
-                <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block">Phone & WhatsApp</span>
-                  <a href="tel:+919908093964" class="font-bold text-[#5c3cd6] hover:underline">+91 99080 93964</a>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-2.5">
-                <span class="text-sm">✉️</span>
-                <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block">Email Address</span>
-                  <a href="mailto:kayasuddinmazumder@gmail.com" class="font-bold text-[#5c3cd6] hover:underline break-all">kayasuddinmazumder@gmail.com</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Direct Action Buttons -->
-            <div class="grid grid-cols-2 gap-2 pt-1">
-              <a href="tel:+919908093964" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs text-center shadow-xs transition">
-                📞 Call Now
-              </a>
-              <a href="https://wa.me/919908093964?text=Hello%20Urban%20Shine%2C%20I%20would%20like%20to%20enquire%20about%20cleaning%20services." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs text-center shadow-xs transition">
-                💬 WhatsApp Chat
-              </a>
-            </div>
-          </div>
-
-          <p class="text-center text-[10px] text-slate-400 mt-4">
-            © 2026 Urban Shine Cleaning Services • Nanakramguda, Hyderabad
-          </p>
-        </section>
-      </main>
     </div>
-
-    <!-- 3. STICKY BOTTOM CART BAR -->
-    <div id="homeBottomBar" style="display: none;" class="absolute bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-8px_25px_rgba(0,0,0,0.18)] flex items-center justify-between max-w-xl mx-auto">
-      <div>
-        <span id="bottomTotalPrice" class="text-base font-black text-slate-900 block leading-tight">₹0</span>
-        <span id="bottomItemCount" class="text-[10px] text-slate-500 font-medium">0 services</span>
-      </div>
-      <button onclick="handleCartClick()" type="button" class="bg-[#5c3cd6] hover:bg-[#4d30b8] text-white font-bold px-7 py-2.5 rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition">
-        <span>View Cart</span>
-        <span>➔</span>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <a href="tel:+919908093964" class="w-8 h-8 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center text-sm" title="Call">📞</a>
+      <a href="https://wa.me/919908093964" target="_blank" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm" title="WhatsApp">💬</a>
+      <button onclick="openCart()" class="relative bg-[#5c3cd6] text-white px-2.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+        🛒 <span id="topCartCount">0</span>
       </button>
     </div>
+  </header>
 
-    <!-- ================= 2. YOUR CART SCREEN ================= -->
-    <div id="cartScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
-      <div class="flex flex-col min-h-full">
-        <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3">
-          <button onclick="showCatalogScreen()" type="button" class="text-slate-700 hover:text-black font-extrabold text-base p-1 -ml-1">
-            ←
-          </button>
-          <h2 class="text-sm font-bold text-slate-900">Your cart</h2>
-        </header>
-
-        <main class="max-w-md mx-auto px-4 pt-3 space-y-4 flex-1">
-          <span class="text-[11px] text-slate-400 block font-medium">Full Home / By Room Cleaning</span>
-          
-          <div id="cartScreenItems" class="divide-y divide-slate-100"></div>
-
-          <!-- People Also Take in Cart -->
-          <div class="pt-2 border-t border-slate-100">
-            <h4 class="text-xs font-bold text-slate-800 mb-2">People also take</h4>
-            <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1" id="cartPeopleAlsoTakeContainer"></div>
-          </div>
-
-          <!-- Coupons and offers -->
-          <div class="border-t border-slate-100 pt-2 flex items-center justify-between text-xs text-slate-700">
-            <div class="flex items-center gap-2">
-              <span>🏷️</span>
-              <span class="font-bold">Coupons and offers</span>
-            </div>
-            <span class="text-emerald-600 font-bold text-[11px]">APPLIED ✓</span>
-          </div>
-
-          <!-- Bill Summary -->
-          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
-            <h3 class="font-bold text-slate-900 text-xs mb-1">Bill Summary</h3>
-            <div class="flex justify-between text-slate-500">
-              <span>Item Total</span>
-              <span id="billItemTotal" class="font-semibold text-slate-700">₹0</span>
-            </div>
-            <div class="flex justify-between text-slate-500">
-              <span>Taxes & Equipment Charges</span>
-              <span class="text-emerald-600 font-semibold">FREE</span>
-            </div>
-            <div class="border-t border-slate-200 pt-2 flex justify-between font-extrabold text-sm text-slate-900">
-              <span>Total Amount</span>
-              <span id="billFinalAmount" class="text-[#5c3cd6]">₹0</span>
-            </div>
-          </div>
-        </main>
-
-        <div class="sticky bottom-0 z-40 bg-white border-t border-slate-200 p-3 shadow-md max-w-md mx-auto w-full mt-4">
-          <button onclick="openPhoneAuthModal()" type="button" class="w-full bg-[#5c3cd6] hover:bg-[#4d30b8] text-white font-bold py-3.5 rounded-xl text-xs tracking-wide shadow-md active:scale-95 transition">
-            Login/Sign up to proceed
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 3. SCHEDULE & ADDRESS SCREEN ================= -->
-    <div id="addressScreen" class="app-scrollable-body bg-white hidden flex-col justify-between">
-      <div class="flex flex-col min-h-full">
-        <header class="sticky top-0 z-30 bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <button onclick="backToCartFromAddress()" type="button" class="text-slate-700 hover:text-black font-extrabold text-base p-1 -ml-1">
-              ←
-            </button>
-            <h2 class="text-sm font-bold text-slate-900">Service Address & Schedule</h2>
-          </div>
-          <span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">✓ Verified</span>
-        </header>
-
-        <main class="max-w-md mx-auto px-4 pt-4 space-y-4 text-xs flex-1">
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex justify-between items-center">
-            <div>
-              <span class="text-[11px] text-slate-500 block">Verified Mobile</span>
-              <span id="displayVerifiedPhone" class="font-bold text-slate-900"></span>
-            </div>
-            <div>
-              <span class="text-[11px] text-slate-500 block text-right">Payable Bill</span>
-              <span id="addressBillTotal" class="font-black text-[#5c3cd6] text-sm"></span>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Your Full Name</label>
-              <input type="text" id="custName" required placeholder="Enter full name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Service Date</label>
-                <input type="date" id="custDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Arrival Time</label>
-                <select id="custSlot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
-                  <option value="08:00 AM">08:00 AM</option>
-                  <option value="09:00 AM" selected>09:00 AM</option>
-                  <option value="10:00 AM">10:00 AM</option>
-                  <option value="11:00 AM">11:00 AM</option>
-                  <option value="12:00 PM">12:00 PM</option>
-                  <option value="02:00 PM">02:00 PM</option>
-                  <option value="04:00 PM">04:00 PM</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <label class="block text-[11px] font-bold text-slate-700">Complete Address</label>
-                <button onclick="openPinMapModal()" type="button" id="pinMapBtn" class="text-[10px] font-bold text-[#5c3cd6] bg-violet-50 border border-violet-200 px-2.5 py-1 rounded-full flex items-center gap-1 active:scale-95">
-                  <span>📌</span>
-                  <span>Pin on Map</span>
-                </button>
-              </div>
-              <textarea id="custAddr" rows="3" required placeholder="Flat / House No, Landmark, Nanakramguda, Hyderabad" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]"></textarea>
-              <p id="locStatus" class="text-[10px] text-slate-500 mt-1 hidden"></p>
-            </div>
-          </div>
-        </main>
-
-        <div class="sticky bottom-0 z-40 bg-white border-t border-slate-200 p-4 shadow-md max-w-md mx-auto w-full mt-4">
-          <button onclick="sendFinalWhatsAppBooking()" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md active:scale-95 transition">
-            Confirm Booking via WhatsApp
-          </button>
-        </div>
-      </div>
-    </div>
-
+  <!-- Sub-banner -->
+  <div class="bg-indigo-50 border-b border-indigo-100 px-3.5 py-1.5 flex items-center justify-between text-[11px]">
+    <span class="font-bold text-indigo-900">Full Home / By Room Deep Cleaning</span>
+    <span class="font-semibold text-amber-700">⚡ Instant GPS Booking</span>
   </div>
 
-  <!-- ================= POPUP: PIN-DROP MAP MODAL ================= -->
-  <div id="pinMapModal" class="fixed inset-0 z-50 bg-black/65 hidden flex-col justify-end">
-    <div class="bg-white rounded-t-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden max-w-md mx-auto w-full">
-      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+  <!-- Main Content -->
+  <main class="max-w-xl mx-auto p-3.5 space-y-5">
+
+    <!-- Category Pills -->
+    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+      <a href="#full-home" class="shrink-0 bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">🏠 Full Home</a>
+      <a href="#villa" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">🏡 Villa</a>
+      <a href="#room-wise" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">✨ Kitchen & Rooms</a>
+      <a href="#about" class="shrink-0 bg-white border border-slate-200 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full">ℹ️ About Us</a>
+    </div>
+
+    <!-- Full Home Packages -->
+    <section id="full-home" class="space-y-3">
+      <h2 class="text-base font-extrabold text-slate-900">Full Home & Post-Construction Deep Cleaning</h2>
+      <div id="fullHomeList" class="space-y-3"></div>
+    </section>
+
+    <!-- Villa Packages -->
+    <section id="villa" class="space-y-3">
+      <h2 class="text-base font-extrabold text-slate-900">Independent Villa Deep Cleaning</h2>
+      <div id="villaList" class="space-y-3"></div>
+    </section>
+
+    <!-- Room-Wise Services -->
+    <section id="room-wise" class="space-y-3">
+      <h2 class="text-base font-extrabold text-slate-900">Kitchen & Individual Room Services</h2>
+      <div id="roomList" class="space-y-3"></div>
+    </section>
+
+    <!-- Exclusions Note -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900">
+      <strong>Important Note:</strong> Hard paint marks, cement stains, and sticker/gum removal are excluded from standard deep cleaning packages.
+    </div>
+
+    <!-- About Us Section -->
+    <section id="about" class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-xs font-bold text-slate-900">Select Current or Any Location</h3>
-          <p class="text-[10px] text-slate-500">Auto-detects current location or search/tap on map</p>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">ABOUT US</span>
+          <h3 class="text-base font-extrabold text-slate-900">Full Home deep cleaning service</h3>
         </div>
-        <button onclick="closePinMapModal()" type="button" class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">✕</button>
+        <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold px-2.5 py-1 rounded-full">✓ Trusted Local Team</span>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        We provide professional, reliable, and affordable residential deep cleaning services across <strong>Nanakramguda, Tellapur, Osman Nagar, Aparna CyberOn, Financial District</strong> and surrounding areas in Hyderabad. Using industrial-grade rotary scrubbers, high-suction vacuums, and eco-safe cleaning agents, our trained team ensures spotless, hygienic spaces.
+      </p>
+      <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-bold text-slate-700">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">🛡️<br>Verified Staff</div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">⚙️<br>Pro Machines</div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">💰<br>Transparent Price</div>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 text-xs">
+        <div class="font-bold text-slate-500 text-[10px] uppercase">Contact & Location</div>
+        <div>📍 <strong>Service Areas:</strong> Nanakramguda, Tellapur, Osman Nagar, Hyderabad</div>
+        <div>📞 <strong>Phone & WhatsApp:</strong> +91 99080 93964</div>
+        <div>✉️ <strong>Email:</strong> kayasuddinmazumder@gmail.com</div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <a href="tel:+919908093964" class="bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs text-center">📞 Call Now</a>
+        <a href="https://wa.me/919908093964" target="_blank" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs text-center">💬 WhatsApp Chat</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Bottom Cart Bar -->
+  <div id="bottomBar" class="hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-200 p-3 shadow-lg">
+    <div class="max-w-xl mx-auto flex items-center justify-between">
+      <div>
+        <span id="bottomCount" class="text-xs font-bold text-slate-500 block">0 Items</span>
+        <span id="bottomTotal" class="text-base font-extrabold text-slate-900">₹0</span>
+      </div>
+      <button onclick="openCart()" class="bg-[#5c3cd6] text-white font-extrabold text-xs px-5 py-3 rounded-xl shadow">
+        Proceed to Book (GPS) ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- Checkout & GPS Modal -->
+  <div id="cartModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs overflow-y-auto p-3">
+    <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-xl overflow-hidden my-4">
+      <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+        <h3 class="text-sm font-extrabold">Complete Your Booking</h3>
+        <button onclick="closeCart()" class="text-slate-300 hover:text-white text-lg font-bold">✕</button>
       </div>
 
-      <div class="p-3 space-y-2.5 text-xs">
-        <!-- Search & Current GPS Pin inside Map Modal -->
-        <div class="flex gap-1.5">
-          <input type="text" id="mapSearchInput" placeholder="Search area, street or landmark..." onkeydown="if(event.key==='Enter'){searchLocationOnMap();}" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-[#5c3cd6]">
-          <button onclick="searchLocationOnMap()" type="button" class="bg-slate-800 text-white font-bold px-3 py-1.5 rounded-xl text-[11px]">
-            Search
-          </button>
-          <button onclick="centerMapToCurrentLocation()" type="button" class="bg-sky-50 text-sky-700 border border-sky-200 font-bold px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 active:scale-95" title="Use Current Location">
-            <span>📍</span>
-            <span>GPS</span>
-          </button>
+      <div class="p-4 space-y-4">
+        <!-- Selected Items -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-500 uppercase mb-2">Selected Services</h4>
+          <div id="cartItemsList" class="divide-y divide-slate-100 border border-slate-200 rounded-xl px-3 text-xs"></div>
+          <div class="flex justify-between items-center pt-2 font-extrabold text-sm">
+            <span>Total Estimate</span>
+            <span id="modalTotal" class="text-[#5c3cd6]">₹0</span>
+          </div>
         </div>
 
-        <div id="leafletPinMap" class="w-full h-60 rounded-xl border border-slate-200 z-10"></div>
-
-        <div class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10.5px] text-slate-700 flex items-center justify-between">
-          <span class="font-semibold">Selected Pin:</span>
-          <span id="pinCoordsText" class="font-bold text-[#5c3cd6]">17.419000, 78.348900</span>
+        <!-- Customer Details -->
+        <div class="space-y-2.5">
+          <h4 class="text-xs font-extrabold text-slate-500 uppercase">Customer Details</h4>
+          <input id="custName" type="text" placeholder="Your Full Name *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
+          <input id="custPhone" type="tel" placeholder="Mobile / WhatsApp Number *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="bookDate" type="date" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs">
+            <select id="bookSlot" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs">
+              <option value="8:00 AM - 10:00 AM">8:00 AM - 10:00 AM</option>
+              <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
+              <option value="12:00 PM - 2:00 PM">12:00 PM - 2:00 PM</option>
+              <option value="2:00 PM - 5:00 PM">2:00 PM - 5:00 PM</option>
+            </select>
+          </div>
         </div>
-        <p id="modalPinAddressText" class="text-[10px] text-slate-500 px-1 truncate">Detecting current location or search/tap on map</p>
-      </div>
 
-      <div class="p-3.5 border-t border-slate-100 bg-white flex gap-2">
-        <button onclick="closePinMapModal()" type="button" class="w-1/3 bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl text-xs">
-          Cancel
+        <!-- Auto-GPS Location Section -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-extrabold text-slate-500 uppercase">Service Location (Auto GPS)</h4>
+            <button type="button" onclick="detectGPS()" class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-xs flex items-center gap-1">
+              📍 Detect My GPS
+            </button>
+          </div>
+          <p id="gpsStatus" class="text-[11px] text-slate-500">Tap "Detect My GPS" or tap directly on the map to pin your home.</p>
+          <div id="map"></div>
+          <input id="custAddress" type="text" placeholder="Flat / House No., Building / Society Name, Area *" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#5c3cd6]">
+        </div>
+
+        <button onclick="submitBooking()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-md">
+          💬 Confirm Booking on WhatsApp ➔
         </button>
-        <button onclick="confirmPinnedLocation()" type="button" class="w-2/3 bg
+      </div>
+    </div>
+  </div>
+
+<script>
+const SERVICES = [
+  { id: '1bhk-un', cat: 'full-home', name: '1 BHK Unfurnished Deep Cleaning', desc: '1 Hall, 1 Kitchen, 1 Bathroom, 1 Balcony (Empty Flat)', price: 2499 },
+  { id: '1bhk-fu', cat: 'full-home', name: '1 BHK Furnished Deep Cleaning', desc: '1 Hall, 1 Kitchen, 1 Bathroom, 1 Balcony (With Furniture)', price: 3299 },
+  { id: '2bhk-un', cat: 'full-home', name: '2 BHK Unfurnished Deep Cleaning', desc: '2 Bedrooms, 1 Hall, Kitchen, 2 Bathrooms, 2 Balconies (Empty)', price: 3299 },
+  { id: '2bhk-fu', cat: 'full-home', name: '2 BHK Furnished Deep Cleaning', desc: '2 Bedrooms, Hall, Kitchen, 2 Bathrooms, 2 Balconies (Furnished)', price: 4499 },
+  { id: '3bhk-un', cat: 'full-home', name: '3 BHK Unfurnished Deep Cleaning', desc: '3 Bedrooms, 1 Hall, Kitchen, 3 Bathrooms, 3 Balconies (Empty)', price: 4499 },
+  { id: '3bhk-fu', cat: 'full-home', name: '3 BHK Furnished Deep Cleaning', desc: '3 Bedrooms, Hall, Kitchen, 3 Bathrooms, 3 Balconies (Furnished)', price: 5499 },
+  { id: '4bhk-un', cat: 'full-home', name: '4 BHK Unfurnished Deep Cleaning', desc: '4 Bedrooms, Hall, Kitchen, 4 Bathrooms, 4 Balconies (Empty)', price: 5499 },
+  { id: '4bhk-fu', cat: 'full-home', name: '4 BHK Furnished Deep Cleaning', desc: '4 Bedrooms, Hall, Kitchen, 4 Bathrooms, 4 Balconies (Furnished)', price: 6999 },
+  { id: 'villa-std', cat: 'villa', name: 'Independent Villa Deep Cleaning (Up to 2500 sq.ft)', desc: 'Duplex / Multi-Floor Full Villa Scrubbing & Sanitization (₹5/sq.ft)', price: 11999 },
+  { id: 'kitchen', cat: 'room-wise', name: 'Kitchen Deep Cleaning', desc: 'Chimney outer, stove, tiles, cabinets, sink & exhaust degreasing', price: 1499 },
+  { id: 'living', cat: 'room-wise', name: 'Living Room & Sofa Shampooing', desc: 'Dry vacuuming, wet sofa shampooing, floor scrubbing & dusting', price: 699 },
+  { id: 'balcony', cat: 'room-wise', name: 'Balcony Deep Cleaning', desc: 'Floor scrubbing, railing, glass & pigeon net/wall washing', price: 499 },
+  { id: 'bath', cat: 'room-wise', name: 'Bathroom Deep Cleaning & Descaling', desc: 'Hard water stain removal, tiles, commode, sink & tap polishing', price: 399 },
+  { id: 'window', cat: 'room-wise', name: 'Window Glass, Grill & Track Cleaning', desc: 'Sliding channels, mesh, glass & iron grill deep cleaning', price: 199 },
+  { id: 'ceiling', cat: 'room-wise', name: 'Ceiling Dusting & Cobweb Removal', desc: 'Full home ceiling, fans & light fixture dry dusting', price: 199 }
+];
+
+let cart = {};
+let map, marker;
+let selectedLat = 17.4165, selectedLng = 78.3422;
+
+function renderServices() {
+  const containers = {
+    'full-home': document.getElementById('fullHomeList'),
+    'villa': document.getElementById('villaList'),
+    'room-wise': document.getElementById('roomList')
+  };
+  Object.values(containers).forEach(el => el.innerHTML = '');
+
+  SERVICES.forEach(s => {
+    const qty = cart[s.id] || 0;
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs flex items-center justify-between gap-3';
+    card.innerHTML = `
+      <div class="space-y-1">
+        <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">${s.name}</h3>
+        <p class="text-[11px] text-slate-500 leading-snug">${s.desc}</p>
+        <div class="text-sm font-black text-[#5c3cd6] pt-0.5">₹${s.price.toLocaleString('en-IN')}</div>
+      </div>
+      <div class="shrink-0">
+        ${qty === 0
+          ? `<button onclick="updateQty('${s.id}', 1)" class="bg-indigo-50 text-[#5c3cd6] border border-indigo-200 font-extrabold text-xs px-4 py-2 rounded-xl">+ Add</button>`
+          : `<div class="flex items-center bg-[#5c3cd6] text-white rounded-xl overflow-hidden text-xs font-extrabold">
+               <button onclick="updateQty('${s.id}', -1)" class="px-2.5 py-1.5">−</button>
+               <span class="px-2">${qty}</span>
+               <button onclick="updateQty('${s.id}', 1)" class="px-2.5 py-1.5">+</button>
+             </div>`
+        }
+      </div>
+    `;
+    containers[s.cat].appendChild(card);
+  });
+  updateCartUI();
+}
+
+function updateQty(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+  if (cart[id] <= 0) delete cart[id];
+  renderServices();
+  if (!document.getElementById('cartModal').classList.contains('hidden')) renderModalCart();
+}
+
+function updateCartUI() {
+  let count = 0, total = 0;
+  Object.entries(cart).forEach(([id, q]) => {
+    const item = SERVICES.find(s => s.id === id);
+    if (item) { count += q; total += item.price * q; }
+  });
+  document.getElementById('topCartCount').innerText = count;
+  document.getElementById('bottomCount').innerText = `${count} Service${count > 1 ? 's' : ''} Selected`;
+  document.getElementById('bottomTotal').innerText = `₹${total.toLocaleString('en-IN')}`;
+  document.getElementById('modalTotal').innerText = `₹${total.toLocaleString('en-IN')}`;
+  document.getElementById('bottomBar').classList.toggle('hidden', count === 0);
+}
+
+function openCart() {
+  if (Object.keys(cart).length === 0) {
+    alert('Please add at least one cleaning service first.');
+    return;
+  }
+  renderModalCart();
+  document.getElementById('cartModal').classList.remove('hidden');
+  setTimeout(initMap, 200);
+}
+
+function closeCart() {
+  document.getElementById('cartModal').classList.add('hidden');
+}
+
+function renderModalCart() {
+  const list = document.getElementById('cartItemsList');
+  list.innerHTML = '';
+  Object.entries(cart).forEach(([id, q]) => {
+    const item = SERVICES.find(s => s.id === id);
+    if (!item) return;
+    list.innerHTML += `
+      <div class="py-2 flex justify-between items-center">
+        <div>
+          <span class="font-bold text-slate-900">${item.name}</span>
+          <span class="text-slate-500 block">₹${item.price} × ${q}</span>
+        </div>
+        <span class="font-extrabold text-slate-900">₹${(item.price * q).toLocaleString('en-IN')}</span>
+      </div>
+    `;
+  });
+}
+
+function initMap() {
+  if (!map) {
+    map = L.map('map').setView([selectedLat, selectedLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+    marker = L.marker([selectedLat, selectedLng], { draggable: true }).addTo(map);
+    marker.on('dragend', () => {
+      const pos = marker.getLatLng();
+      selectedLat = pos.lat.toFixed(6);
+      selectedLng = pos.lng.toFixed(6);
+      document.getElementById('gpsStatus').innerText = `📍 Pinned: ${selectedLat}, ${selectedLng}`;
+    });
+    map.on('click', (e) => {
+      selectedLat = e.latlng.lat.toFixed(6);
+      selectedLng = e.latlng.lng.toFixed(6);
+      marker.setLatLng([selectedLat, selectedLng]);
+      document.getElementById('gpsStatus').innerText = `📍 Pinned: ${selectedLat}, ${selectedLng}`;
+    });
+  } else {
+    map.invalidateSize();
+  }
+}
+
+function detectGPS() {
+  const status = document.getElementById('gpsStatus');
+  if (!navigator.geolocation) {
+    status.innerText = '❌ GPS not supported on this browser.';
+    return;
+  }
+  status.innerText = '⏳ Detecting your exact GPS location...';
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      selectedLat = pos.coords.latitude.toFixed(6);
+      selectedLng = pos.coords.longitude.toFixed(6);
+      if (map && marker) {
+        map.setView([selectedLat, selectedLng], 17);
+        marker.setLatLng([selectedLat, selectedLng]);
+      }
+      status.innerHTML = `<span class="text-emerald-700 font-bold">✅ GPS Location Locked: ${selectedLat}, ${selectedLng}</span>`;
+    },
+    (err) => {
+      status.innerText = '⚠️ Please turn ON phone Location (GPS) and tap Allow.';
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+function submitBooking() {
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const date = document.getElementById('bookDate').value;
+  const slot = document.getElementById('bookSlot').value;
+  const addr = document.getElementById('custAddress').value.trim();
+
+  if (!name || !phone || !addr) {
+    alert('Please enter your Name, Phone Number, and Flat/Building Address.');
+    return;
+  }
+
+  let itemsText = '', total = 0;
+  Object.entries(cart).forEach(([id, q]) => {
+    const item = SERVICES.find(s => s.id === id);
+    if (item) {
+      itemsText += `• ${item.name} (x${q}) - ₹${item.price * q}\n`;
+      total += item.price * q;
+    }
+  });
+
+  const mapLink = `https://www.google.com/maps?q=${selectedLat},${selectedLng}`;
+  const msg = `*New Booking - Full Home deep cleaning service*\n\n` +
+              `*Name:* ${name}\n` +
+              `*Phone:* ${phone}\n` +
+              `*Date & Slot:* ${date || 'Flexible'} (${slot})\n` +
+              `*Address:* ${addr}\n` +
+              `*GPS Pin:* ${mapLink}\n\n` +
+              `*Selected Services:*\n${itemsText}\n` +
+              `*Total Estimate:* ₹${total.toLocaleString('en-IN')}\n` +
+              `_(Note: Paint/cement/sticker stains excluded)_`;
+
+  window.open(`https://wa.me/919908093964?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+document.getElementById('bookDate').valueAsDate = new Date(Date.now() + 86400000);
+renderServices();
+</script>
+</body>
+</html>
