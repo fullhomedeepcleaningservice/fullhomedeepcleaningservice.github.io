@@ -154,7 +154,7 @@ window.openDetails = function(key) {
           'Chimney outer hood, filters & exhaust fan degreasing',
           'Gas stove, burner, countertop & wall tiles oil stain removal',
           'Sink descaling, tap mirror polishing & drain sanitization',
-          'Cabinets exterior wiping & rotary machine floor scrubbing'
+          'Inside & outside cleaning of kitchen cabinets & rotary machine floor scrubbing'
         ]
       }
     ];
@@ -212,24 +212,18 @@ window.openDetails = function(key) {
             ]
           : [
               'Industrial single-disc rotary machine floor scrubbing',
-              'লিভিং রুম এবং বেডরুমের কাবার্ডের ভেতর ও বাহির সম্পূর্ণ পরিষ্কার করা হবে (Inside & outside cleaning of Living Room & Bedroom cupboards)',
+              'Inside & outside cleaning of all Living Room & Bedroom cupboards',
               'Fans, lights, switchboards & cobweb removal'
             ]
       },
       {
         title: 'Kitchen Deep Cleaning',
         img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80',
-        items: s.fur
-          ? [
-              'Chimney outer, stove, countertop & wall tiles degreasing',
-              'Kitchen cabinets exterior wiping & sink descaling',
-              'Floor machine scrubbing & cobweb removal'
-            ]
-          : [
-              'Chimney outer, stove, countertop & wall tiles degreasing',
-              'Kitchen cabinets inside & outside wiping + sink descaling',
-              'Floor machine scrubbing & cobweb removal'
-            ]
+        items: [
+          'Chimney outer, stove, countertop & wall tiles degreasing',
+          'Inside & outside cleaning of kitchen cabinets & sink descaling',
+          'Floor machine scrubbing & cobweb removal'
+        ]
       },
       {
         title: 'Bathrooms, Balconies & Windows',
@@ -257,10 +251,8 @@ window.openDetails = function(key) {
   });
 
   if (s.fur) {
-    html += '<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 space-y-1.5 text-[11px] text-amber-950">' +
-      '<p class="font-bold">📌 বিশেষ তথ্য (Furnished):</p>' +
-      '<p>ফার্নিশড বেডরুম (Bedroom), লিভিং রুম (Living Room) বা কিচেন কাবার্ডের ভেতর পরিষ্কার করা যাবে, কিন্তু আগে ফোনে কথা বলতে হবে।</p>' +
-      '<a href="tel:+919908093964" class="block bg-slate-900 text-white font-bold py-2 rounded-lg text-center text-[11px] mt-1">📞 Call Now (+91 99080 93964)</a>' +
+    html += '<div class="bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-[10.5px] text-amber-950">' +
+      '⚠️ Wardrobe & living room cupboard interiors are NOT included in the standard furnished package (available upon prior phone discussion).' +
       '</div>';
   }
 
