@@ -15,7 +15,7 @@ window.services = {
   '2bhk_fur': { name: '2 BHK Furnished', price: 4499, sub: '2 Beds, Hall, Kitchen, 2 Baths, 2 Balconies (Furnished)', fur: true, count: 0 },
   '3bhk_unf': { name: '3 BHK Unfurnished', price: 4499, sub: '3 Beds, 1 Hall, Kitchen, 3 Baths, 3 Balconies (Empty)', fur: false, count: 0 },
   '3bhk_fur': { name: '3 BHK Furnished', price: 5499, sub: '3 Beds, Hall, Kitchen, 3 Baths, 3 Balconies (Furnished)', fur: true, count: 0 },
-  '4bhk_unf': { name: '4 BHK Unfurnished', price: 5499, sub: '4 Beds, Hall, Kitchen, 4 Baths, 4 Balconies (Empty)', fur: false, count: 0 },
+  '4bhk_unf': { name: '4 BHK Unfurnished', price: 5999, sub: '4 Beds, Hall, Kitchen, 4 Baths, 4 Balconies (Empty)', fur: false, count: 0 },
   '4bhk_fur': { name: '4 BHK Furnished', price: 6999, sub: '4 Beds, Hall, Kitchen, 4 Baths, 4 Balconies (Furnished)', fur: true, count: 0 },
   'villa_deep': { name: 'Luxury Independent Villa Deep Cleaning', price: 7500, sqFt: 1500, sub: 'Multi-Floor Independent House / Duplex Villa', fur: false, count: 0 },
   'kitchen': { name: 'Kitchen Deep Clean', price: 1499, sub: 'Chimney, stove, sink & tile degrease', fur: false, count: 0 },
@@ -36,6 +36,13 @@ window.pinLat = 17.4190;
 window.pinLng = 78.3489;
 window.pinAddr = '';
 
+window.hasMainPackage = function() {
+  for (var k in window.services) {
+    if (k.indexOf('addon_') !== 0 && window.services[k].count > 0) return true;
+  }
+  return false;
+};
+
 window.getTotal = function() {
   var t = 0;
   for (var k in window.services) {
@@ -46,14 +53,31 @@ window.getTotal = function() {
 
 window.syncUI = function() {
   var c = 0;
+  var mainSelected = window.hasMainPackage();
+
+  if (!mainSelected) {
+    ['addon_ceiling', 'addon_sofa', 'addon_balcony'].forEach(function(ak) {
+      if (window.services[ak]) window.services[ak].count = 0;
+    });
+  }
+
   for (var k in window.services) {
     var s = window.services[k];
     c += s.count;
     var btn = document.getElementById('btn-' + k);
     if (btn) {
-      if (k === 'villa_deep') btn.textContent = s.count > 0 ? 'Added ✓' : '+ Add Villa Clean';
-      else if (k.indexOf('addon_') === 0) btn.textContent = s.count > 0 ? '✓ Added' : 'Add';
-      else btn.textContent = s.count > 0 ? '✓' : '+ Add';
+      if (k === 'villa_deep') {
+        btn.textContent = s.count > 0 ? 'Added ✓' : '+ Add Villa Clean';
+      } else if (k.indexOf('addon_') === 0) {
+        if (!mainSelected) {
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = 'inline-block';
+          btn.textContent = s.count > 0 ? '✓ Added' : 'Add';
+        }
+      } else {
+        btn.textContent = s.count > 0 ? '✓' : '+ Add';
+      }
       btn.style.backgroundColor = s.count > 0 ? '#5c3cd6' : '';
       btn.style.color = s.count > 0 ? '#ffffff' : '';
     }
@@ -79,9 +103,15 @@ window.syncUI = function() {
 
 window.toggleItem = function(key) {
   if (!window.services[key]) return;
+  if (key.indexOf('addon_') === 0 && !window.hasMainPackage()) return;
   window.services[key].count = window.services[key].count > 0 ? 0 : 1;
   window.syncUI();
-  if (!document.getElementById('cartScreen').classList.contains('hidden')) window.renderCart();
+  if (!document.getElementById('cartScreen').classList.contains('hidden')) {
+    var totalCount = 0;
+    for (var k in window.services) totalCount += window.services[k].count;
+    if (totalCount === 0) window.showScreen('catalogScreen');
+    else window.renderCart();
+  }
 };
 
 window.updateVilla = function(val) {
@@ -188,7 +218,7 @@ window.openDetails = function(key) {
     sections = [
       {
         title: 'Window Glass & Grill Cleaning Scope',
-        img: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80',
+        img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80',
         items: [
           'Sliding window tracks vacuuming & mud/dust removal',
           'Mosquito mesh washing & both-side glass squeegee cleaning',
@@ -445,11 +475,11 @@ window.sendWhatsApp = function() {
       <h3 class="text-xs font-bold text-slate-800 mb-2">People also take</h3>
       <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
         <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
-          <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
+          <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=250&q=80" class="w-full h-16 object-cover rounded-lg mb-1">
           <span class="text-[10px] font-bold text-slate-900 leading-tight block">Ceiling dusting & cobweb cleaning</span>
           <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
             <span class="text-xs font-extrabold">₹199</span>
-            <button id="btn-addon_ceiling" onclick="window.toggleItem('addon_ceiling')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            <button id="btn-addon_ceiling" onclick="window.toggleItem('addon_ceiling')" style="display: none;" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
           </div>
         </div>
         <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
@@ -457,7 +487,7 @@ window.sendWhatsApp = function() {
           <span class="text-[10px] font-bold text-slate-900 leading-tight block">Sofa & upholstery wet shampooing</span>
           <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
             <span class="text-xs font-extrabold">₹149</span>
-            <button id="btn-addon_sofa" onclick="window.toggleItem('addon_sofa')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            <button id="btn-addon_sofa" onclick="window.toggleItem('addon_sofa')" style="display: none;" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
           </div>
         </div>
         <div class="min-w-[125px] w-[125px] bg-white border border-slate-200 rounded-xl p-2 flex flex-col justify-between">
@@ -465,7 +495,7 @@ window.sendWhatsApp = function() {
           <span class="text-[10px] font-bold text-slate-900 leading-tight block">Balcony deep cleaning</span>
           <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
             <span class="text-xs font-extrabold">₹499</span>
-            <button id="btn-addon_balcony" onclick="window.toggleItem('addon_balcony')" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
+            <button id="btn-addon_balcony" onclick="window.toggleItem('addon_balcony')" style="display: none;" type="button" class="text-[10px] font-bold px-2 py-0.5 rounded text-[#5c3cd6] border border-slate-200">Add</button>
           </div>
         </div>
       </div>
@@ -575,7 +605,7 @@ window.sendWhatsApp = function() {
               </div>
               <button onclick="window.openDetails('4bhk_unf')" type="button" class="mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
               <div class="mt-2.5 flex items-center justify-between pt-1.5 border-t border-slate-100">
-                <span class="text-xs font-extrabold">₹5,499</span>
+                <span class="text-xs font-extrabold">₹5,999</span>
                 <button id="btn-4bhk_unf" onclick="window.toggleItem('4bhk_unf')" type="button" class="text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">+ Add</button>
               </div>
             </div>
@@ -665,7 +695,7 @@ window.sendWhatsApp = function() {
             </div>
           </div>
           <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between">
-            <img onclick="window.openDetails('window')" src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
+            <img onclick="window.openDetails('window')" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80" class="w-full h-28 object-cover">
             <div class="p-2.5">
               <h3 class="text-xs font-bold">Window Glass & Grill</h3>
               <button onclick="window.openDetails('window')" type="button" class="w-full mt-2 py-1 text-[9.5px] font-bold text-[#5c3cd6] bg-slate-50 rounded border border-slate-200">View details</button>
